@@ -14,7 +14,7 @@ function Header() {
                 <button className="navbar-toggler btnButtonCollapse" 
                 type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" 
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span className="navbar-toggler-icon spanButtonCollapse"></span>
+                    <span className="navbar-toggler-icon spanButtonCollapse"></span>
                 </button>
                 
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
@@ -51,7 +51,7 @@ function Header() {
                 </ul>
             
                 <div className="divBtnConectar">
-                    <button className="btn btn-outline-dark btnConectar widthFull" type="button">
+                    <div className="btn btn-outline-dark btnConectar widthFull">
                     <div className="flex justify-center">
                         <ConnectButton
                             showBalance={false}
@@ -61,13 +61,13 @@ function Header() {
                             }}
                         />
                     </div>
-                    </button>
+                    </div>
                 </div>
 
                 <div className="divSelect hiddenElement">
                     <form action="">
-                    <select className="form-select selectIdiomas">
-                        <option selected value="1">ES</option>
+                    <select defaultValue="1" className="form-select selectIdiomas">
+                        <option value="1">ES</option>
                         <option value="2">EN</option>
                         <option value="3">FR</option>
                     </select>
