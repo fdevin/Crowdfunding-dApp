@@ -1,5 +1,4 @@
 import App from "./App";
-import "./index.css";
 import "./polyfills";
 import {
   connectorsForWallets,
@@ -78,7 +77,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         chains={chains}
         coolMode
       >
-        <App />
+        <App/>
       </RainbowKitProvider>
     </WagmiConfig>
   </React.StrictMode>
