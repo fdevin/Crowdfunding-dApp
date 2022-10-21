@@ -2,7 +2,7 @@ const { ethers } = require("hardhat");
 async function main() {
   const contract = await ethers.getContractAt(
     "CrowdFactory",
-    "0x44F4552e8D802E21012911f53cd503486AA4bd7D"
+    "0x1231A910b653aB51dc37B6ea5503349eD33D2062"
   );
   stock = [5, 5, 5, 5, 5, 5, 5, 5];
   standar_cost = ethers.utils.parseUnits("0.1", 18);
@@ -20,8 +20,8 @@ async function main() {
   //projOwnerAddr
   test2_acc = "0x007a5203F27a5AC24F9B6C7e635b76FE35059A60";
   await contract.createProject(
-    "first project",
-    "description",
+    "Serati Vibes",
+    "Evento en homenaje a Serati.",
     ethers.utils.parseUnits("0.1", 18),
     stock,
     cost,

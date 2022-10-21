@@ -5,7 +5,9 @@ import { useCosts, useGoalAmount, useProjTitle, useStocks } from "../read";
 import { toWei, toBN } from "../utils";
 import { useAddRecentTransaction,useConnectModal } from "@rainbow-me/rainbowkit";
 import { useCrowdfundingProjectFunctionWriter } from "../hooks";
-
+import { useState } from "react";
+import type { ChangeEvent, FormEvent } from "react";
+import { ethers } from "ethers";
 
 
 
@@ -18,6 +20,7 @@ function ProjectView() {
     const goalAmount = useGoalAmount(PROJ_CONTRACT_ADDRESS)
     const projTittle = useProjTitle(PROJ_CONTRACT_ADDRESS)
     const { openConnectModal } = useConnectModal();
+    const [amount, setAmount] = useState<string>("");
 
     // custom hook we made in hooks.ts for writing functions
     const { writeAsync, isError } = useCrowdfundingProjectFunctionWriter({
@@ -45,6 +48,17 @@ function ProjectView() {
         console.log(stockVec)
     }
 
+     // onChange handler for amount
+  const handleAmount = (e: ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+
+    const value = e.target.value;
+    DEBUG && console.log("amount: ", value);
+
+    // set amount
+    setAmount(value);
+  };
+
     const handleDonate = async (option: number) => {
         if(!acc.isConnected){
             alert("need to connect your acc");
@@ -56,31 +70,55 @@ function ProjectView() {
             console.log("Invalid value");
             DEBUG && console.log("Invalid Option Value");
         }
+
         if (costsVec != undefined) {
             console.log("inicia")
-            const optionCost = costsVec[option];
-            const fee = optionCost.mul(toBN(2))
-            const feeAmount = fee.div(100)
-            console.log(feeAmount.toString())
-            const optionFee = optionCost.add(feeAmount);
-            console.log("option fee");
+            if (option==7){
+                console.log(amount)
+                const freeAmount =toWei(amount)
 
-            console.log(optionFee);
-            const tx = await writeAsync({
-                args:[option],
-                overrides: {
-                  value: optionCost,
-                },
-              });
-              
 
-        
-            console.log("tx >>> ", tx);
+                if( freeAmount.isZero() ){
+                    return;
+                }
 
-            addRecentTransaction({
-                hash: tx.hash,
-                description: `Donate ${optionFee} MATIC`,
-            });
+
+
+                const tx = await writeAsync({
+                    args:[option],
+                    overrides: {
+                      value: freeAmount,
+                    },
+                  });
+                console.log("tx >>> ", tx);
+    
+                addRecentTransaction({
+                    hash: tx.hash,
+                    description: `Donate ${freeAmount} MATIC`,
+                });
+            } else {
+                const optionCost = costsVec[option];
+                //const fee = optionCost.mul(toBN(2))
+                //const feeAmount = fee.div(100)
+                //console.log(feeAmount.toString())
+                //const optionFee = optionCost.add(feeAmount);
+                //console.log("option fee");
+    
+                //console.log(optionFee);
+                const tx = await writeAsync({
+                    args:[option],
+                    overrides: {
+                      value: optionCost,
+                    },
+                  });
+                console.log("tx >>> ", tx);
+    
+                addRecentTransaction({
+                    hash: tx.hash,
+                    description: `Donate ${optionCost} MATIC`,
+                });
+            }
+ 
 
     } else {
         DEBUG && console.log("Cannot retrieve the right value");
@@ -91,80 +129,93 @@ function ProjectView() {
     return (
         <>
             <main className="mainBackground">
-                <section className="container-fluid">
-                    <div className="container paddingBottom">
-                        <div className="row mainProject">
-                            <div className="cardInnerSingle row">
-                                <div className="col-lg-5 col-md-4 col-sm-12">
-                                    <div className="ImgArtist">
-                                        <img className="artistMain roundedList" src="images/ars00.jpg" alt="" />
+            <section className="container-fluid">
+            <div className="container paddingBottom">
+
+
+                <div className="row mainProject">
+
+                    <div className="cardInnerSingle row">
+
+                        <div className="col-lg-5 col-md-4 col-sm-12">
+
+                            <div className="ImgArtist">
+                                <img className="artistMain roundedList" src="images/ars00.jpg" alt="" />
+
+                            </div>
+                        </div>
+
+                        <div className="col-lg-7 col-md-5 col-sm-12">
+                            <div className="cardBodyInner">
+                                <div className="divArtist">
+
+                                    <div className="divPadding">
+                                        <h2>Nombre del Proyecto</h2>
+                                        de <a className="anchorArtistName" href="#">Nombre de Artista</a>
+                                        <p className="bigger">Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+                                            sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                        </p>
+                                    </div>
+
+                                </div>
+                                <div className="progressArea">
+                                    <div className="upperProgress">
+                                        <div className="topProg">
+                                            <span className="bolder">811</span> 
+                                            USD contribuidos
+                                        </div>
+                                        <div className="rightProg"><span className="bolder">25</span> Contribuyentes</div>
+                                    </div>
+                                    <div className="progress">
+                                        
+                                        TESTING APPEAREANCE
+                                       
+                                    </div>
+                                    <div className="lowerProgress">
+                                        <div className="leftProg">11% recaudado de 8000 USD</div>
+                                        <div className="rightProg"><span className="bolder">25</span> D&iacute;as resteantes
+                                        </div>
                                     </div>
                                 </div>
-                                <div className="col-lg-7 col-md-5 col-sm-12">
-                                    <div className="cardBodyInner">
-                                        <div className="divArtist">
-                                            <div className="divPadding">
-                                                <h2>{projTittle}</h2>
-                                                de <a className="anchorArtistName" href="#">Nombre de Artista</a>
-                                                <p className="bigger">Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                                                    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                                </p>
-                                            </div>
+
+                                <div className="buttonSocial">
+                                    <a className="CTA" href="#">Contribuir al proyecto</a>
+                                    <button className="btn btn-outline-dark btnSeguir" type="button">
+                                        <div className="btnContenidoFlex">
+                                            <img className="btnIcon" src="images/icon-heart.png"
+                                                alt="add to favorites" />
+                                            <span>
+                                                <a href="#">Seguir </a></span>
                                         </div>
-                                        <div className="progressArea">
-                                            <div className="upperProgress">
-                                                <div className="topProg">
-                                                    <span className="bolder">811</span>
-                                                    USD contribuidos
-                                                </div>
-                                                <div className="rightProg"><span className="bolder">25</span> Contribuyentes</div>
-                                            </div>
-                                            <div className="progress">
-                                                <div className="progress-bar w-75" role="progressbar" aria-valuenow={raisedAmount?.mul(100).div(goalAmount || 1 ).toString()} aria-valuemin="0" aria-valuemax="100"></div>
-                                            </div>
-                                            <div className="lowerProgress">
-                                                <div className="leftProg">11% recaudado de 8000 USD</div>
-                                                <div className="rightProg"><span className="bolder">25</span> D&iacute;as resteantes
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div className="buttonSocial">
-                                            <a className="CTA" href="#">Contribuir al proyecto</a>
-                                            <button className="btn btn-outline-dark btnSeguir" type="button">
-                                                <div className="btnContenidoFlex">
-                                                    <img className="btnIcon" src="images/icon-heart.png"
-                                                        alt="add to favorites" />
-                                                    <span>
-                                                        <a href="#">Seguir </a></span>
-                                                </div>
-                                            </button>
-                                            <div className="socialArea">
-                                                <a className="btnIconos" href="#" role="button">
-                                                    <div className="iconFacebook"></div>
-                                                </a>
-                                                <a className="btnIconos" href="#" role="button">
-                                                    <div className="iconTwitter"></div>
-                                                </a>
-                                                <a className="btnIconos" href="#" role="button">
-                                                    <div className="iconClip"></div>
-                                                </a>
-
-                                            </div>
-                                        </div>
-
-                                        <div className="categories">
-                                            <a className="anchorArtistName" href="#">Conciertos</a>,
-                                            <a className="anchorArtistName" href="#">Buenos Aires, Argentina</a>
-                                        </div>
-
-
+                                    </button>
+                                    <div className="socialArea">
+                                        
+                                        <a className="btnIconos" href="#" role="button">
+                                            <div className="iconFacebook"></div>
+                                        </a>
+                                        <a className="btnIconos" href="#" role="button">
+                                            <div className="iconTwitter"></div>
+                                        </a>
+                                        <a className="btnIconos" href="#" role="button">
+                                            <div className="iconClip"></div>
+                                        </a>
+                                    
                                     </div>
                                 </div>
+
+                                <div className="categories">    
+                                    <a className="anchorArtistName" href="#">Conciertos</a>, 
+                                    <a className="anchorArtistName" href="#">Buenos Aires, Argentina</a>
+                                </div>
+                               
+                               
                             </div>
                         </div>
                     </div>
-                </section>
+                </div>
+                
+            </div>
+        </section>
                 <section className="singleMain">
                     <div className="container paddingBottom">
                         <div className="row">
@@ -197,7 +248,7 @@ function ProjectView() {
                                         <h3>Contribuir sin Recompensa</h3>
                                         <div className="input-group mb-3 greenInput">
                                             <input type="text" className="form-control" placeholder="15" aria-label="15"
-                                                aria-describedby="amount" />
+                                                aria-describedby="amount" onChange={handleAmount}/>
                                             <span className="input-group-text" id="amount">USD</span>
                                         </div>
                                         <p className="bigger">Apoya el proyecto sin recompensa, simplemente porque te resulta

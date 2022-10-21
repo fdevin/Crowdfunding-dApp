@@ -2065,6 +2065,7 @@ input[type="file"]#inputImg {
 
 .cardBodyInner {
   padding: 2rem 2.25rem;
+  display: inline-grid
 }
 
 .projectCard .progress {
