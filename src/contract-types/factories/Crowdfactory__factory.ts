@@ -3,10 +3,9 @@
 /* tslint:disable */
 
 /* eslint-disable */
+import type { Crowdfactory, CrowdfactoryInterface } from "../Crowdfactory";
 import type { Provider } from "@ethersproject/providers";
 import { Contract, Signer, utils } from "ethers";
-
-import type { Crowdfactory, CrowdfactoryInterface } from "../Crowdfactory";
 
 const _abi = [
   {

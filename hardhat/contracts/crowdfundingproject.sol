@@ -8,6 +8,7 @@ contract CrowdfundingProject {
     uint256 public goalAmount;
     uint256 public raisedAmount;
     uint256 public transactionFee; // This fee will go to the feeWalletAddr. Percentage 0.05 = 500
+    uint256 public numOfContributions; // Number of times people contributed to this project.
     uint64[8] stockPerTier; // This will represent the stock per tier at i index
     uint256[8] costPerTier; // This will represent the cost per tier at i index
     address ownerWalletAddr; // Wallet address of the Project Owner.
@@ -73,7 +74,7 @@ contract CrowdfundingProject {
 
         //calculate total amount raised
         raisedAmount += donationAmount;
-
+        numOfContributions = numOfContributions+1;
         currentStockInTier = currentStockInTier - 1;
         stockPerTier[option] = uint64(currentStockInTier);
         emit Funded(

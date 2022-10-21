@@ -109,6 +109,24 @@ export function useGoalAmount(contractAddress: string): BigNumber | undefined {
   return goalAmount as unknown as BigNumber;
 }
 
+export function useNumOfContributions(contractAddress: string): BigNumber | undefined {
+  const goalAmountReader = useCrowdfundingProjectFunctionReader({
+    contractAddress: contractAddress,
+    functionName: "numOfContributions",
+  });
+
+  const numOfContributions:
+    | Awaited<ReturnType<Crowdfundingproject["numOfContributions"]>>
+    | Result
+    | undefined = goalAmountReader.data;
+
+  DEBUG && console.log("numOfContributions: ", numOfContributions);
+
+  if (!numOfContributions) return undefined;
+
+  return numOfContributions as unknown as BigNumber;
+}
+
 export function useRaisedAmount(
   contractAddress: string
 ): BigNumber | undefined {

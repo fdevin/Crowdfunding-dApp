@@ -98,5 +98,10 @@ describe("Croudfunding Factory Contract Testing", function () {
     console.log(formatEther(await provider.getBalance(owner.address)));
     console.log(formatEther(await provider.getBalance(addr1.address)));
     console.log(formatEther(await cfInstance.raisedAmount()));
+
+    await cfInstance.connect(addr2).makeDonation(7, {
+      value: ethers.utils.parseEther("1.0"),
+    }).to.be.revertedWith('Goal Achieved');;
+
   });
 });

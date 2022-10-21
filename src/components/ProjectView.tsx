@@ -1,13 +1,13 @@
 import { useProvider, useAccount } from "wagmi"
 import type { Crowdfactory } from "../contract-types/Crowdfactory";
 import { DEBUG, PROJ_CONTRACT_ADDRESS } from "../../constants";
-import { useCosts, useGoalAmount, useProjTitle, useStocks } from "../read";
+import { useCosts, useGoalAmount, useNumOfContributions, useProjTitle, useRaisedAmount, useStocks } from "../read";
 import { toWei, toBN } from "../utils";
 import { useAddRecentTransaction,useConnectModal } from "@rainbow-me/rainbowkit";
 import { useCrowdfundingProjectFunctionWriter } from "../hooks";
 import { useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
-import { ethers } from "ethers";
+import { ethers, utils } from "ethers";
 import ProgressBar from 'react-bootstrap/ProgressBar';
 
 
@@ -15,7 +15,9 @@ import ProgressBar from 'react-bootstrap/ProgressBar';
 function ProjectView() {
     //const provider = useProvider()
     const acc = useAccount()
-    const raisedAmount = useGoalAmount(PROJ_CONTRACT_ADDRESS);
+    const raisedAmount = useRaisedAmount(PROJ_CONTRACT_ADDRESS);
+    const numOfContributions = useNumOfContributions(PROJ_CONTRACT_ADDRESS);
+
     const stockVec = useStocks(PROJ_CONTRACT_ADDRESS);
     const costsVec = useCosts(PROJ_CONTRACT_ADDRESS);
     const goalAmount = useGoalAmount(PROJ_CONTRACT_ADDRESS)
@@ -127,6 +129,14 @@ function ProjectView() {
     }
     };
 
+const maticContribution = () => {
+    if(raisedAmount!=undefined){
+        return utils.formatEther(raisedAmount)
+    }
+    else{
+        return "";
+    }
+};
     return (
         <>
             <main className="mainBackground">
@@ -162,10 +172,10 @@ function ProjectView() {
                                 <div className="progressArea">
                                     <div className="upperProgress">
                                         <div className="topProg">
-                                            <span className="bolder">811</span> 
-                                            USD contribuidos
+                                            <span className="bolder">{maticContribution()} </span> 
+                                            Matic contribuidos 
                                         </div>
-                                        <div className="rightProg"><span className="bolder">25</span> Contribuyentes</div>
+                                        <div className="rightProg"><span className="bolder">{numOfContributions?.toString()}</span> Contribuyentes</div>
                                     </div>
                                     <ProgressBar now={raisedAmount?.mul(100).div(goalAmount || 1 ).toString()}  />
                                        
