@@ -1,8 +1,9 @@
 const { expect, assert } = require("chai");
 const { ethers, upgrades } = require("hardhat");
+const { solidity } = require("ethereum-waffle");
 var chai = require("chai");
-//use default BigNumber
-chai.use(require("chai-bignumber")());
+const { formatEther } = require("ethers/lib/utils");
+chai.use(solidity);
 
 describe("Croudfunding Factory Contract Testing", function () {
   let croudFundingFactoryContract, CrowdfundingProject;
@@ -31,10 +32,20 @@ describe("Croudfunding Factory Contract Testing", function () {
     assert.equal(await croudFundingFactoryContract.totalPublishedProjs(), 0);
     console.log();
     let stock = [1, 2, 3, 4, 5, 6, 7, 8];
-    let prices = [1, 2, 3, 4, 5, 6, 7, 8];
+    let prices = [
+      ethers.utils.parseEther("1.0"),
+      ethers.utils.parseEther("2.0"),
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+    ];
     let projectTittle = "Project0";
-    let projGoalAmount = ethers.utils.parseEther("100.0");
+    let projGoalAmount = ethers.utils.parseEther("1.0");
     let projDescript = "This project is cool";
+
     await croudFundingFactoryContract
       .connect(addr1)
       .createProject(
@@ -59,21 +70,33 @@ describe("Croudfunding Factory Contract Testing", function () {
 
     const balanceFeeWalletOwner = await provider.getBalance(owner.address);
     const balanceCreatorWalletOwner = await provider.getBalance(addr1.address);
+
     console.log("Prev Bal");
-    console.log(balanceFeeWalletOwner);
-    console.log(balanceCreatorWalletOwner);
-    let prevStock = await cfInstance.stockPerTier(0);
+    console.log(formatEther(balanceFeeWalletOwner));
+    console.log(formatEther(balanceCreatorWalletOwner));
+    let prevStock = await cfInstance.getStocks()[0];
+    let donationAmount = prices[0];
     console.log("Prev Stock");
     console.log(prevStock);
+
     await cfInstance.connect(addr2).makeDonation(0, {
-      value: ethers.utils.parseEther("1.0"),
+      value: donationAmount,
     });
     console.log("Post");
-    console.log(await provider.getBalance(owner.address));
-    console.log(await provider.getBalance(addr1.address));
-    console.log(await cfInstance.stockPerTier(0));
-    assert.equal(prevStock - 1, await cfInstance.stockPerTier(0));
+    console.log(formatEther(await provider.getBalance(owner.address)));
+    console.log(formatEther(await provider.getBalance(addr1.address)));
+    console.log(formatEther(await cfInstance.raisedAmount()));
+    //assert.equal(prevStock - 1, await cfInstance.getStocks()[0]);
+    //expect(balanceCreatorWalletOwner-feeAmount).to.equal(await provider.getBalance(addr1.address));
+    // Make a free donation
 
-    //todo: failing case assert.
+    await cfInstance.connect(addr2).makeDonation(7, {
+      value: ethers.utils.parseEther("1.0"),
+    });
+
+    console.log("Post Free Donation");
+    console.log(formatEther(await provider.getBalance(owner.address)));
+    console.log(formatEther(await provider.getBalance(addr1.address)));
+    console.log(formatEther(await cfInstance.raisedAmount()));
   });
 });

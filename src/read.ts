@@ -129,8 +129,9 @@ export function useRaisedAmount(
   return raisedAmount as unknown as BigNumber;
 }
 
-
-export function useCosts(contractAddress: string):Array<BigNumber> | undefined {
+export function useCosts(
+  contractAddress: string
+): Array<BigNumber> | undefined {
   const costsAmountReader = useCrowdfundingProjectFunctionReader({
     contractAddress: contractAddress,
     functionName: "getCosts",
@@ -148,8 +149,9 @@ export function useCosts(contractAddress: string):Array<BigNumber> | undefined {
   return costsArray as unknown as Array<BigNumber>;
 }
 
-
-export function useStocks(contractAddress: string):Array<BigNumber> | undefined {
+export function useStocks(
+  contractAddress: string
+): Array<BigNumber> | undefined {
   const costsAmountReader = useCrowdfundingProjectFunctionReader({
     contractAddress: contractAddress,
     functionName: "getStocks",

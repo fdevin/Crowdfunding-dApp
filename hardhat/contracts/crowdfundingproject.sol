@@ -9,7 +9,7 @@ contract CrowdfundingProject {
     uint256 public raisedAmount;
     uint256 public transactionFee; // This fee will go to the feeWalletAddr. Percentage 0.05 = 500
     uint64[8] stockPerTier; // This will represent the stock per tier at i index
-    uint128[8] costPerTier; // This will represent the cost per tier at i index
+    uint256[8] costPerTier; // This will represent the cost per tier at i index
     address ownerWalletAddr; // Wallet address of the Project Owner.
     address feeWalletAddr; // Address where amount to be transfered
 
@@ -30,7 +30,7 @@ contract CrowdfundingProject {
         address feeWalletAddr_,
         uint256 transactionFee_,
         uint64[8] memory stockPerTier_,
-        uint128[8] memory costPerTier_
+        uint256[8] memory costPerTier_
     ) {
         //mapping values
         projTitle = projectTitle_;
@@ -51,8 +51,14 @@ contract CrowdfundingProject {
         uint256 currentStockInTier = stockPerTier[option];
         require(currentStockInTier > 0, "No stock left");
 
+        uint256 currentPriceofOption = costPerTier[option];
+        require(
+            currentPriceofOption <= msg.value,
+            "Amount sent too low for selected opt."
+        );
+
         // Calculated Fee amount that will go to the fee wallet.
-        uint256 calculatedFeeAmount = msg.value / (10000 * transactionFee);
+        uint256 calculatedFeeAmount = msg.value / 50;
         uint256 donationAmount = msg.value - calculatedFeeAmount;
 
         //record walletaddress of donor
@@ -84,7 +90,7 @@ contract CrowdfundingProject {
         s = stockPerTier;
     }
 
-    function getCosts() public view returns (uint128[8] memory c) {
+    function getCosts() public view returns (uint256[8] memory c) {
         c = costPerTier;
     }
 }

@@ -51,8 +51,6 @@ function Header() {
                 </ul>
             
                 <div className="divBtnConectar">
-                    <div className="btn btn-outline-dark btnConectar widthFull">
-                    <div className="flex justify-center">
                         <ConnectButton
                             showBalance={false}
                             accountStatus={{
@@ -60,8 +58,6 @@ function Header() {
                                 largeScreen: "full",
                             }}
                         />
-                    </div>
-                    </div>
                 </div>
 
                 <div className="divSelect hiddenElement">

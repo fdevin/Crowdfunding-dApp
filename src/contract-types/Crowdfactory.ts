@@ -4,16 +4,9 @@
 
 /* eslint-disable */
 import type {
-  TypedEventFilter,
-  TypedEvent,
-  TypedListener,
-  OnEvent,
-  PromiseOrValue,
-} from "./common";
-import type {
+  EventFragment,
   FunctionFragment,
   Result,
-  EventFragment,
 } from "@ethersproject/abi";
 import type { Listener, Provider } from "@ethersproject/providers";
 import type {
@@ -28,6 +21,14 @@ import type {
   Signer,
   utils,
 } from "ethers";
+
+import type {
+  OnEvent,
+  PromiseOrValue,
+  TypedEvent,
+  TypedEventFilter,
+  TypedListener,
+} from "./common";
 
 export interface CrowdfactoryInterface extends utils.Interface {
   functions: {

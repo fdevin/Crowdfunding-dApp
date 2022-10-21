@@ -70,31 +70,31 @@ export function useCrowdfundingProjectContract(
 export interface UseCrowdfundingProjectFunctionWriterProps {
   contractAddress: string;
   functionName: string;
-  args?:Array<any>
+  args?: Array<any>;
 }
 
 export function useCrowdfundingProjectFunctionWriter({
   contractAddress,
   functionName,
-  args
+  args,
 }: UseCrowdfundingProjectFunctionWriterProps): ReturnType<
   typeof useContractWrite
 > {
-  if(args){
+  if (args) {
     const contractWrite = useContractWrite({
       addressOrName: contractAddress,
       contractInterface: CROWNFUNDINGPROJECT_ABI,
       functionName: functionName,
-      args:args
+      args: args,
     });
-    return contractWrite
+    return contractWrite;
   } else {
     const contractWrite = useContractWrite({
       addressOrName: contractAddress,
       contractInterface: CROWNFUNDINGPROJECT_ABI,
       functionName: functionName,
     });
-    return contractWrite    
+    return contractWrite;
   }
 }
 

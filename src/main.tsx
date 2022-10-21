@@ -2,9 +2,21 @@ import App from "./App";
 import "./polyfills";
 import {
   connectorsForWallets,
-  wallet,
   RainbowKitProvider,
 } from "@rainbow-me/rainbowkit";
+import {
+  rainbowWallet,
+  metaMaskWallet,
+  coinbaseWallet,
+  walletConnectWallet,
+  argentWallet,
+  braveWallet,
+  imTokenWallet,
+  ledgerWallet,
+  injectedWallet,
+  trustWallet,
+  omniWallet
+} from '@rainbow-me/rainbowkit/wallets';
 import "@rainbow-me/rainbowkit/styles.css";
 import React from "react";
 import ReactDOM from "react-dom/client";
@@ -34,31 +46,31 @@ const connectors = connectorsForWallets([
   {
     groupName: "Recommended",
     wallets: [
-      wallet.metaMask({ chains, shimDisconnect: true }),
-      wallet.walletConnect({ chains }),
-      wallet.coinbase({ appName: "CrowdFunding Platform", chains }),
-      wallet.rainbow({ chains }),
+      rainbowWallet({ chains }),
+      metaMaskWallet({ chains }),
+      coinbaseWallet({ chains, appName: 'Crowdfunding Platform' }),
+      walletConnectWallet({ chains }),
     ],
   },
   {
     groupName: "Others",
     wallets: [
-      wallet.argent({ chains }),
-      wallet.brave({
+      argentWallet({ chains }),
+      braveWallet({
         chains,
         shimDisconnect: true,
       }),
-      wallet.imToken({ chains }),
-      wallet.injected({
+      imTokenWallet({ chains }),
+      injectedWallet({
         chains,
         shimDisconnect: true,
       }),
-      wallet.ledger({
+      ledgerWallet({
         chains,
         
       }),
-      wallet.steak({ chains }),
-      wallet.trust({ chains, shimDisconnect: true }),
+      omniWallet({ chains }),
+      trustWallet({ chains, shimDisconnect: true }),
     ],
   },
 ]);
