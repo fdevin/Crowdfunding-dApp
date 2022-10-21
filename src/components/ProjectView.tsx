@@ -8,6 +8,7 @@ import { useCrowdfundingProjectFunctionWriter } from "../hooks";
 import { useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import { ethers } from "ethers";
+import ProgressBar from 'react-bootstrap/ProgressBar';
 
 
 
@@ -166,11 +167,8 @@ function ProjectView() {
                                         </div>
                                         <div className="rightProg"><span className="bolder">25</span> Contribuyentes</div>
                                     </div>
-                                    <div className="progress">
-                                        
-                                        TESTING APPEAREANCE
+                                    <ProgressBar now={raisedAmount?.mul(100).div(goalAmount || 1 ).toString()}  />
                                        
-                                    </div>
                                     <div className="lowerProgress">
                                         <div className="leftProg">11% recaudado de 8000 USD</div>
                                         <div className="rightProg"><span className="bolder">25</span> D&iacute;as resteantes
