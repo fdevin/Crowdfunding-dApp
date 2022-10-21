@@ -1,0 +1,7 @@
+export const FACTORY_CONTRACT_ADDRESS =
+  "0x44F4552e8D802E21012911f53cd503486AA4bd7D";
+export const PROJ_CONTRACT_ADDRESS =
+  "0x37a72d0317891592Db870DA97BED68370e61C0E9";
+
+//just for testing purpose
+export const DEBUG = true;

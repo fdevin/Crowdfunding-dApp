@@ -1,15 +1,75 @@
 import {useProvider,useAccount} from "wagmi"
+import type { Crowdfactory } from "../contract-types/Crowdfactory";
+import { DEBUG ,PROJ_CONTRACT_ADDRESS } from "../../constants";
+import { useCosts, useGoalAmount,useStocks } from "../read";
+import { toWei,toBN } from "../utils";
+import { useAddRecentTransaction } from "@rainbow-me/rainbowkit";
+import { useCrowdfundingProjectFunctionWriter } from "../hooks";
+
+
+
 
 function ProjectView() {
     //const provider = useProvider()
     const acc = useAccount()
+    const raisedAmount = useGoalAmount(PROJ_CONTRACT_ADDRESS);
+    const stockVec = useStocks(PROJ_CONTRACT_ADDRESS);
+    const costsVec = useCosts(PROJ_CONTRACT_ADDRESS);
+
+ 
+    const addRecentTransaction = useAddRecentTransaction();
+
     const handleClick = () => {
         if(!acc.isConnected){
             alert("need to connect your acc");
         } else {
             console.log(acc.address)
         }
+
+    
+        console.log(costsVec)
+        console.log(raisedAmount)
+        console.log(stockVec)
     }
+
+    const handleDonate = async (option: number) => {
+        if(option>7) {
+            console.log("Invalid value");
+            DEBUG && console.log("Invalid Option Value");
+        }
+        if(costsVec!=undefined){
+            console.log("inicia")
+            const optionCost = costsVec[option];
+            const fee = optionCost.mul(toBN(2))
+            const feeAmount = fee.div(100)
+            console.log(feeAmount.toString())
+            const optionFee = optionCost.add(feeAmount);
+            console.log("option fee");
+
+            console.log(optionFee);
+
+        
+        } 
+
+            /*const tx = await writeAsync({
+                overrides: {
+                  value: optionFee,
+                },
+              });
+              
+            console.log("tx >>> ", tx);
+
+            addRecentTransaction({
+                hash: tx.hash,
+                description: `Donate ${optionFee} MATIC`,
+              });
+
+        } else {
+            DEBUG && console.log("Cannot retrieve the right value");
+            return
+        }*/
+      };
+
   return (
     <>
         <main className="mainBackground">
@@ -125,7 +185,7 @@ function ProjectView() {
                                 </div>
                                 <p className="bigger">Apoya el proyecto sin recompensa, simplemente porque te resulta
                                     interesante.</p>
-                                <a className="CTA">Contribuir</a>
+                                    <a  onClick={()=>{handleDonate(7)}} className="CTA">Contribuir</a>
                             </div>
                             </div>
                             <div className="rewardCard prizes">
@@ -142,7 +202,7 @@ function ProjectView() {
                                         <li>Lorem Ipsum</li></ul>    
                                     </div>
                                     <p className="bigger">Sí, quiero ser contribuyente nivel bronce!</p>
-                                <a className="CTA">Contribuir</a>
+                                <a onClick={()=>{handleDonate(0)}}  className="CTA">Contribuir</a>
                                 <p className="backers">22 patrocinadores</p>
                             </div>
                             </div>
@@ -160,7 +220,7 @@ function ProjectView() {
                                         <li>Lorem Ipsum</li></ul>    
                                     </div>
                                     <p className="bigger">Sí, quiero ser contribuyente nivel plata!</p>
-                                <a className="CTA">Contribuir</a>
+                                <a  onClick={()=>{handleDonate(1)}} className="CTA">Contribuir</a>
                                 <p className="backers">22 patrocinadores</p>
                             </div>
                             </div>
@@ -178,7 +238,7 @@ function ProjectView() {
                                         <li>Lorem Ipsum</li></ul>    
                                     </div>
                                     <p className="bigger">Sí, quiero ser contribuyente nivel oro!</p>
-                                <a className="CTA">Contribuir</a>
+                                <a  onClick={()=>{handleDonate(2)}} className="CTA">Contribuir</a>
                                 <p className="backers">22 patrocinadores</p>
                             </div>
                             </div>
@@ -196,7 +256,7 @@ function ProjectView() {
                                         <li>Lorem Ipsum</li></ul>    
                                     </div>
                                     <p className="bigger">Sí, quiero ser contribuyente nivel diamante!</p>
-                                <a className="CTA">Contribuir</a>
+                                <a onClick={()=>{handleDonate(3)}} className="CTA">Contribuir</a>
                                 <p className="backers">22 patrocinadores</p>
                             </div>
                             </div>
@@ -214,7 +274,7 @@ function ProjectView() {
                                         <li>Lorem Ipsum</li></ul>    
                                     </div>
                                     <p className="bigger">Sí, quiero ser contribuyente nivel platino!</p>
-                                <a className="CTA">Contribuir</a>
+                                <a onClick={()=>{handleDonate(4)}}  className="CTA">Contribuir</a>
                                 <p className="backers">22 patrocinadores</p>
                             </div>
                             </div>
@@ -232,7 +292,7 @@ function ProjectView() {
                                         <li>Lorem Ipsum</li></ul>    
                                     </div>
                                     <p className="bigger">Sí, quiero ser contribuyente nivel paladio!</p>
-                                <a className="CTA">Contribuir</a>
+                                <a onClick={()=>{handleDonate(5)}}  className="CTA">Contribuir</a>
                                 <p className="backers">22 patrocinadores</p>
                             </div>
                             </div>

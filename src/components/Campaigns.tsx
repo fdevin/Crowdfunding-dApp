@@ -1,4 +1,4 @@
-import { DEBUG } from "../constants";
+import { DEBUG ,PROJ_CONTRACT_ADDRESS } from "../../constants";
 import { useTotalPublishedProjs } from "../read";
 import Campaign from "./Campaign";
 

@@ -1,10 +1,9 @@
 //read function
 //view and pure functions (Smartcontract)
-
 import type { BigNumber } from "ethers";
 import type { Result } from "ethers/lib/utils";
 
-import { DEBUG } from "./constants";
+import { DEBUG } from "../constants";
 import type { Crowdfactory } from "./contract-types/Crowdfactory";
 import type { Crowdfundingproject } from "./contract-types/Crowdfundingproject";
 import {
@@ -128,4 +127,42 @@ export function useRaisedAmount(
   if (!raisedAmount) return undefined;
 
   return raisedAmount as unknown as BigNumber;
+}
+
+
+export function useCosts(contractAddress: string):Array<BigNumber> | undefined {
+  const costsAmountReader = useCrowdfundingProjectFunctionReader({
+    contractAddress: contractAddress,
+    functionName: "getCosts",
+  });
+
+  const costsArray:
+    | Awaited<ReturnType<Crowdfundingproject["getCosts"]>>
+    | Result
+    | undefined = costsAmountReader.data;
+
+  DEBUG && console.log("goalAmount: ", costsArray);
+
+  if (!costsArray) return undefined;
+
+  return costsArray as unknown as Array<BigNumber>;
+}
+
+
+export function useStocks(contractAddress: string):Array<BigNumber> | undefined {
+  const costsAmountReader = useCrowdfundingProjectFunctionReader({
+    contractAddress: contractAddress,
+    functionName: "getStocks",
+  });
+
+  const stocksArray:
+    | Awaited<ReturnType<Crowdfundingproject["getStocks"]>>
+    | Result
+    | undefined = costsAmountReader.data;
+
+  DEBUG && console.log("stocksAmount: ", stocksArray);
+
+  if (!stocksArray) return undefined;
+
+  return stocksArray as unknown as Array<BigNumber>;
 }

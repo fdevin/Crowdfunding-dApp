@@ -8,19 +8,18 @@ contract CrowdfundingProject {
     uint256 public goalAmount;
     uint256 public raisedAmount;
     uint256 public transactionFee; // This fee will go to the feeWalletAddr. Percentage 0.05 = 500
-    uint64[8] public stockPerTier; // This will represent the stock per tier at i index
-    uint128[8] public costPerTier; // This will represent the cost per tier at i index
+    uint64[8] stockPerTier; // This will represent the stock per tier at i index
+    uint128[8] costPerTier; // This will represent the cost per tier at i index
     address ownerWalletAddr; // Wallet address of the Project Owner.
     address feeWalletAddr; // Address where amount to be transfered
-
 
     event Funded(
         address indexed donor,
         uint256 indexed totalAmount,
         uint256 indexed option,
-        uint256  calculatedFeeAmount,
-        uint256  donationAmount,        
-        uint256  timestamp
+        uint256 calculatedFeeAmount,
+        uint256 donationAmount,
+        uint256 timestamp
     );
 
     constructor(
@@ -48,16 +47,18 @@ contract CrowdfundingProject {
     function makeDonation(uint256 option) public payable {
         //if goal amount is achieved, close the proj
         require(goalAmount > raisedAmount, "Goal Achieved");
-        require(option <8, "Opt greader than 8");
+        require(option < 8, "Opt greader than 8");
         uint256 currentStockInTier = stockPerTier[option];
-        require(currentStockInTier >0, "No stock left");
+        require(currentStockInTier > 0, "No stock left");
 
         // Calculated Fee amount that will go to the fee wallet.
         uint256 calculatedFeeAmount = msg.value / (10000 * transactionFee);
         uint256 donationAmount = msg.value - calculatedFeeAmount;
 
         //record walletaddress of donor
-        (bool success, ) = payable(feeWalletAddr).call{value: calculatedFeeAmount}("");
+        (bool success, ) = payable(feeWalletAddr).call{
+            value: calculatedFeeAmount
+        }("");
         require(success, "fee NOT TRANSFERRED");
 
         //record walletaddress of donor
@@ -67,8 +68,23 @@ contract CrowdfundingProject {
         //calculate total amount raised
         raisedAmount += donationAmount;
 
-        currentStockInTier=currentStockInTier-1;
+        currentStockInTier = currentStockInTier - 1;
         stockPerTier[option] = uint64(currentStockInTier);
-        emit Funded(msg.sender, msg.value,option,calculatedFeeAmount,donationAmount,block.timestamp);
+        emit Funded(
+            msg.sender,
+            msg.value,
+            option,
+            calculatedFeeAmount,
+            donationAmount,
+            block.timestamp
+        );
+    }
+
+    function getStocks() public view returns (uint64[8] memory s) {
+        s = stockPerTier;
+    }
+
+    function getCosts() public view returns (uint128[8] memory c) {
+        c = costPerTier;
     }
 }

@@ -1,4 +1,4 @@
-import "./croudfundingproject.sol";
+import "./crowdfundingproject.sol";
 
 // SPDX-License-Identifier: Unlicensed
 pragma solidity ^0.8.15;
@@ -22,11 +22,9 @@ contract CrowdFactory {
     );
 
     // Constructor needed to create the factory.
-    constructor(
-        address factoryOwnerAddr
-    ) {
+    constructor(address factoryOwnerAddr) {
         feeWalletAddr = factoryOwnerAddr;
-    }  
+    }
 
     function totalPublishedProjs() public view returns (uint256) {
         return publishedProjs.length;

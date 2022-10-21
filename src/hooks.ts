@@ -1,8 +1,8 @@
 import { useContract, useContractRead, useContractWrite } from "wagmi";
 
+import { FACTORY_CONTRACT_ADDRESS } from "../constants";
 import CROWDFACTORY_ABI from "./abis/crowdfactory.json";
 import CROWNFUNDINGPROJECT_ABI from "./abis/crowdfundingproject.json";
-import { FACTORY_CONTRACT_ADDRESS } from "./constants";
 import type { Crowdfactory } from "./contract-types/Crowdfactory";
 import type { Crowdfundingproject } from "./contract-types/Crowdfundingproject";
 
@@ -70,21 +70,32 @@ export function useCrowdfundingProjectContract(
 export interface UseCrowdfundingProjectFunctionWriterProps {
   contractAddress: string;
   functionName: string;
+  args?:Array<any>
 }
 
 export function useCrowdfundingProjectFunctionWriter({
   contractAddress,
   functionName,
+  args
 }: UseCrowdfundingProjectFunctionWriterProps): ReturnType<
   typeof useContractWrite
 > {
-  const contractWrite = useContractWrite({
-    addressOrName: contractAddress,
-    contractInterface: CROWNFUNDINGPROJECT_ABI,
-    functionName: functionName,
-  });
-
-  return contractWrite;
+  if(args){
+    const contractWrite = useContractWrite({
+      addressOrName: contractAddress,
+      contractInterface: CROWNFUNDINGPROJECT_ABI,
+      functionName: functionName,
+      args:args
+    });
+    return contractWrite
+  } else {
+    const contractWrite = useContractWrite({
+      addressOrName: contractAddress,
+      contractInterface: CROWNFUNDINGPROJECT_ABI,
+      functionName: functionName,
+    });
+    return contractWrite    
+  }
 }
 
 export interface UseCrowdfundingProjectFunctionReaderProps {

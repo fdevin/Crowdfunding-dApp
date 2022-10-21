@@ -101,19 +101,26 @@ const _abi = [
     type: "event",
   },
   {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "costPerTier",
+    inputs: [],
+    name: "getCosts",
     outputs: [
       {
-        internalType: "uint128",
-        name: "",
-        type: "uint128",
+        internalType: "uint128[8]",
+        name: "c",
+        type: "uint128[8]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getStocks",
+    outputs: [
+      {
+        internalType: "uint64[8]",
+        name: "s",
+        type: "uint64[8]",
       },
     ],
     stateMutability: "view",
@@ -179,25 +186,6 @@ const _abi = [
         internalType: "uint256",
         name: "",
         type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "stockPerTier",
-    outputs: [
-      {
-        internalType: "uint64",
-        name: "",
-        type: "uint64",
       },
     ],
     stateMutability: "view",

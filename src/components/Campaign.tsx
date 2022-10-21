@@ -1,4 +1,4 @@
-import { DEBUG } from "../constants";
+import { DEBUG } from "../../constants";
 import { useCrowdfundingProjectFunctionWriter } from "../hooks";
 import {
   useGoalAmount,

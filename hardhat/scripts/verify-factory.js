@@ -1,18 +1,13 @@
-const { run, ethers } = require("hardhat");
+const { run } = require("hardhat");
+
 async function main() {
-  const contractAddress = "0xcf092E8bDCDC1FA8B15Ebeb9D97453D498067Df1";
-  const args = [
-    "first title",
-    ethers.utils.parseUnits("0.1", 18),
-    "description",
-    "0xdC4EfDac43475F434482e61805E0df96D2dC1DF4",
-  ];
+  const contractAddress = "0x44F4552e8D802E21012911f53cd503486AA4bd7D";
 
   try {
     await run("verify:verify", {
       address: contractAddress,
-      constructorArguments: args,
-      contract: "contracts/crowdfunding.sol:CrowdfundingProject",
+      constructorArguments: ["0xC47545D6226d04f124782481f5e51Cf07c20b840"],
+      contract: "contracts/crowdfunding.sol:CrowdFactory",
     });
   } catch (error) {
     if (error.message.toLowerCase().includes("already verified")) {

@@ -1,10 +1,11 @@
 import react from "@vitejs/plugin-react";
-import ViteFonts from "vite-plugin-fonts";
 import { defineConfig } from "vite";
+import ViteFonts from "vite-plugin-fonts";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(),
+  plugins: [
+    react(),
     ViteFonts({
       // Custom fonts.
       custom: {
@@ -12,24 +13,34 @@ export default defineConfig({
           {
             name: "helvetica regular",
             local: "helvetica regular",
-            src: ["./fonts/helveticaneueltstd-roman-webfont.woff2","./fonts/helveticaneueltstd-roman-webfont.woff1"],
+            src: [
+              "./fonts/helveticaneueltstd-roman-webfont.woff2",
+              "./fonts/helveticaneueltstd-roman-webfont.woff1",
+            ],
           },
           {
             name: "helvetica light",
             local: "helvetica light",
-            src: ["./fonts/helveticaneueltstd-light-webfont.woff2","./fonts/helveticaneueltstd-light-webfont.woff1"],
-
+            src: [
+              "./fonts/helveticaneueltstd-light-webfont.woff2",
+              "./fonts/helveticaneueltstd-light-webfont.woff1",
+            ],
           },
           {
             name: "helvetica bold",
             local: "helvetica light",
-            src: ["./fonts/helveticaneueltstd-bold-webfont.woff2","./fonts/helveticaneueltstd-bold-webfont.woff1"],
-
+            src: [
+              "./fonts/helveticaneueltstd-bold-webfont.woff2",
+              "./fonts/helveticaneueltstd-bold-webfont.woff1",
+            ],
           },
           {
             name: "canela light",
             local: "canela light",
-            src: ["./fonts/canela-light-webfont.woff2","./fonts/canela-light-webfont.woff1"],
+            src: [
+              "./fonts/canela-light-webfont.woff2",
+              "./fonts/canela-light-webfont.woff1",
+            ],
           },
         ],
         display: "auto",
@@ -37,5 +48,4 @@ export default defineConfig({
       },
     }),
   ],
-  
 });
