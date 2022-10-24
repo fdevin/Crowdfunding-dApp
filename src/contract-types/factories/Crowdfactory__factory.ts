@@ -66,9 +66,9 @@ const _abi = [
       },
       {
         indexed: false,
-        internalType: "uint128[8]",
+        internalType: "uint256[8]",
         name: "costPerTier",
-        type: "uint128[8]",
+        type: "uint256[8]",
       },
     ],
     name: "ProjectCreated",
@@ -97,9 +97,9 @@ const _abi = [
         type: "uint64[8]",
       },
       {
-        internalType: "uint128[8]",
+        internalType: "uint256[8]",
         name: "costPerTier_",
-        type: "uint128[8]",
+        type: "uint256[8]",
       },
       {
         internalType: "address",

@@ -13,6 +13,7 @@ contract CrowdfundingProject {
     uint256[8] costPerTier; // This will represent the cost per tier at i index
     address ownerWalletAddr; // Wallet address of the Project Owner.
     address feeWalletAddr; // Address where amount to be transfered
+    bool isPaused; // Boolean that will check if the contract is paused or not.
 
     event Funded(
         address indexed donor,
@@ -42,12 +43,14 @@ contract CrowdfundingProject {
         stockPerTier = stockPerTier_;
         costPerTier = costPerTier_;
         transactionFee = transactionFee_;
+        isPaused=false;
     }
 
     //donation function
     function makeDonation(uint256 option) public payable {
         //if goal amount is achieved, close the proj
-        require(goalAmount > raisedAmount, "Goal Achieved");
+        require(isPaused == false,"Contract is Paused");
+        //require(goalAmount > raisedAmount, "Goal Achieved");
         require(option < 8, "Opt greader than 8");
         uint256 currentStockInTier = stockPerTier[option];
         require(currentStockInTier > 0, "No stock left");
@@ -94,4 +97,19 @@ contract CrowdfundingProject {
     function getCosts() public view returns (uint256[8] memory c) {
         c = costPerTier;
     }
+
+    function reStock(uint64[8] memory stockToAdd) public {
+        require(msg.sender == ownerWalletAddr,"Not the owner.");
+        uint64[8] memory newStock = stockPerTier;
+        for(uint i = 0 ; i <8; i++){
+            newStock[i] = newStock[i] + stockToAdd[i];
+        }
+        stockPerTier = newStock;
+    }
+
+    function togglePause() public {
+        require(msg.sender == ownerWalletAddr,"Not the owner.");
+        isPaused = !isPaused;
+    }
+
 }

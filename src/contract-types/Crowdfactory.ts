@@ -31,7 +31,7 @@ import type {
 
 export interface CrowdfactoryInterface extends utils.Interface {
   functions: {
-    "createProject(string,string,uint256,uint64[8],uint128[8],address)": FunctionFragment;
+    "createProject(string,string,uint256,uint64[8],uint256[8],address)": FunctionFragment;
     "feePercentageAmount()": FunctionFragment;
     "feeWalletAddr()": FunctionFragment;
     "publishedProjs(uint256)": FunctionFragment;
@@ -97,7 +97,7 @@ export interface CrowdfactoryInterface extends utils.Interface {
   ): Result;
 
   events: {
-    "ProjectCreated(string,uint256,address,address,address,uint256,uint64[8],uint128[8])": EventFragment;
+    "ProjectCreated(string,uint256,address,address,address,uint256,uint64[8],uint256[8])": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "ProjectCreated"): EventFragment;
@@ -223,7 +223,7 @@ export interface Crowdfactory extends BaseContract {
   };
 
   filters: {
-    "ProjectCreated(string,uint256,address,address,address,uint256,uint64[8],uint128[8])"(
+    "ProjectCreated(string,uint256,address,address,address,uint256,uint64[8],uint256[8])"(
       projTitle?: null,
       goalAmount?: null,
       ownerWalletAddr?: PromiseOrValue<string> | null,

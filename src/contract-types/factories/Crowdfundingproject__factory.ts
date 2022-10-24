@@ -49,9 +49,9 @@ const _abi = [
         type: "uint64[8]",
       },
       {
-        internalType: "uint128[8]",
+        internalType: "uint256[8]",
         name: "costPerTier_",
-        type: "uint128[8]",
+        type: "uint256[8]",
       },
     ],
     stateMutability: "nonpayable",
@@ -105,9 +105,9 @@ const _abi = [
     name: "getCosts",
     outputs: [
       {
-        internalType: "uint128[8]",
+        internalType: "uint256[8]",
         name: "c",
-        type: "uint128[8]",
+        type: "uint256[8]",
       },
     ],
     stateMutability: "view",
@@ -150,6 +150,19 @@ const _abi = [
     name: "makeDonation",
     outputs: [],
     stateMutability: "payable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "numOfContributions",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
   {

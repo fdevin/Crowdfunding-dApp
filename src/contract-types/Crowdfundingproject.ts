@@ -35,6 +35,7 @@ export interface CrowdfundingprojectInterface extends utils.Interface {
     "getStocks()": FunctionFragment;
     "goalAmount()": FunctionFragment;
     "makeDonation(uint256)": FunctionFragment;
+    "numOfContributions()": FunctionFragment;
     "projDescription()": FunctionFragment;
     "projTitle()": FunctionFragment;
     "raisedAmount()": FunctionFragment;
@@ -47,6 +48,7 @@ export interface CrowdfundingprojectInterface extends utils.Interface {
       | "getStocks"
       | "goalAmount"
       | "makeDonation"
+      | "numOfContributions"
       | "projDescription"
       | "projTitle"
       | "raisedAmount"
@@ -62,6 +64,10 @@ export interface CrowdfundingprojectInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "makeDonation",
     values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "numOfContributions",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "projDescription",
@@ -82,6 +88,10 @@ export interface CrowdfundingprojectInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "goalAmount", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "makeDonation",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "numOfContributions",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -162,6 +172,8 @@ export interface Crowdfundingproject extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    numOfContributions(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     projDescription(overrides?: CallOverrides): Promise<[string]>;
 
     projTitle(overrides?: CallOverrides): Promise<[string]>;
@@ -182,6 +194,8 @@ export interface Crowdfundingproject extends BaseContract {
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  numOfContributions(overrides?: CallOverrides): Promise<BigNumber>;
+
   projDescription(overrides?: CallOverrides): Promise<string>;
 
   projTitle(overrides?: CallOverrides): Promise<string>;
@@ -201,6 +215,8 @@ export interface Crowdfundingproject extends BaseContract {
       option: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    numOfContributions(overrides?: CallOverrides): Promise<BigNumber>;
 
     projDescription(overrides?: CallOverrides): Promise<string>;
 
@@ -242,6 +258,8 @@ export interface Crowdfundingproject extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    numOfContributions(overrides?: CallOverrides): Promise<BigNumber>;
+
     projDescription(overrides?: CallOverrides): Promise<BigNumber>;
 
     projTitle(overrides?: CallOverrides): Promise<BigNumber>;
@@ -261,6 +279,10 @@ export interface Crowdfundingproject extends BaseContract {
     makeDonation(
       option: PromiseOrValue<BigNumberish>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    numOfContributions(
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     projDescription(overrides?: CallOverrides): Promise<PopulatedTransaction>;

@@ -3,13 +3,16 @@ import type { Crowdfactory } from "../contract-types/Crowdfactory";
 import { DEBUG, PROJ_CONTRACT_ADDRESS } from "../../constants";
 import { useCosts, useGoalAmount, useNumOfContributions, useProjTitle, useRaisedAmount, useStocks } from "../read";
 import { toWei, toBN } from "../utils";
-import { useAddRecentTransaction,useConnectModal } from "@rainbow-me/rainbowkit";
+import { useAddRecentTransaction, useConnectModal } from "@rainbow-me/rainbowkit";
 import { useCrowdfundingProjectFunctionWriter } from "../hooks";
-import { useState } from "react";
-import type { ChangeEvent, FormEvent } from "react";
+import { useState,useEffect } from "react";
+import type { ChangeEvent, FormEvent} from "react";
 import { ethers, utils } from "ethers";
 import ProgressBar from 'react-bootstrap/ProgressBar';
-
+import { usePriceFeed } from "../price-feed";
+import axios from 'axios'
+import useAsyncEffect from 'use-async-effect'
+import { formatEther } from "ethers/lib/utils";
 
 
 function ProjectView() {
@@ -17,6 +20,7 @@ function ProjectView() {
     const acc = useAccount()
     const raisedAmount = useRaisedAmount(PROJ_CONTRACT_ADDRESS);
     const numOfContributions = useNumOfContributions(PROJ_CONTRACT_ADDRESS);
+    const [maticPrice, setMaticPrice] = useState([0]);
 
     const stockVec = useStocks(PROJ_CONTRACT_ADDRESS);
     const costsVec = useCosts(PROJ_CONTRACT_ADDRESS);
@@ -24,48 +28,45 @@ function ProjectView() {
     const projTittle = useProjTitle(PROJ_CONTRACT_ADDRESS)
     const { openConnectModal } = useConnectModal();
     const [amount, setAmount] = useState<string>("");
-
+    
     // custom hook we made in hooks.ts for writing functions
-    const { writeAsync, isError } = useCrowdfundingProjectFunctionWriter({
-        contractAddress: PROJ_CONTRACT_ADDRESS || "",
-        functionName: "makeDonation",
-    });
+
 
     const addRecentTransaction = useAddRecentTransaction();
 
     const handleClick = () => {
         if (!acc.isConnected) {
             alert("need to connect your acc");
-            
+
             openConnectModal && openConnectModal()
-            
-             return;
+
+            return;
             // Todo:: add backendcheck once an acc is logged in.
-            
+
         } else {
             console.log(acc.address)
         }
 
-        console.log(costsVec)
-        console.log(raisedAmount)
-        console.log(stockVec)
     }
 
-     // onChange handler for amount
-  const handleAmount = (e: ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
+    // onChange handler for amount
+    const handleAmount = (e: ChangeEvent<HTMLInputElement>) => {
+        e.preventDefault();
 
-    const value = e.target.value;
-    DEBUG && console.log("amount: ", value);
+        const value = e.target.value;
+        DEBUG && console.log("amount: ", value);
 
-    // set amount
-    setAmount(value);
-  };
+        // set amount
+        setAmount(value);
+    };
 
     const handleDonate = async (option: number) => {
-        if(!acc.isConnected){
+        console.log("MAAAATIC")
+        console.log(maticPrice)
+
+        if (!acc.isConnected) {
             alert("need to connect your acc");
-            
+
             openConnectModal && openConnectModal()
             return;
         }
@@ -76,25 +77,23 @@ function ProjectView() {
 
         if (costsVec != undefined) {
             console.log("inicia")
-            if (option==7){
+            if (option == 7) {
                 console.log(amount)
-                const freeAmount =toWei(amount)
+                const freeAmount = toWei(amount)
 
 
-                if( freeAmount.isZero() ){
+                if (freeAmount.isZero()) {
                     return;
                 }
 
-
-
                 const tx = await writeAsync({
-                    args:[option],
+                    args: [option],
                     overrides: {
-                      value: freeAmount,
+                        value: freeAmount,
                     },
-                  });
+                });
                 console.log("tx >>> ", tx);
-    
+
                 addRecentTransaction({
                     hash: tx.hash,
                     description: `Donate ${freeAmount} MATIC`,
@@ -106,124 +105,157 @@ function ProjectView() {
                 //console.log(feeAmount.toString())
                 //const optionFee = optionCost.add(feeAmount);
                 //console.log("option fee");
-    
+
                 //console.log(optionFee);
                 const tx = await writeAsync({
-                    args:[option],
+                    args: [option],
                     overrides: {
-                      value: optionCost,
+                        value: optionCost,
                     },
-                  });
+                });
                 console.log("tx >>> ", tx);
-    
+
                 addRecentTransaction({
                     hash: tx.hash,
                     description: `Donate ${optionCost} MATIC`,
                 });
             }
- 
 
-    } else {
-        DEBUG && console.log("Cannot retrieve the right value");
-        return
-    }
+
+        } else {
+            DEBUG && console.log("Cannot retrieve the right value");
+            return
+        }
     };
 
-const maticContribution = () => {
-    if(raisedAmount!=undefined){
-        return utils.formatEther(raisedAmount)
+    const getActualDonationString = () => {
+        if (raisedAmount == undefined || goalAmount == undefined) {
+            return ""
+        }
+        var numRaisedAmount = parseFloat(utils.formatEther(raisedAmount))
+        var numGoalAmount = parseFloat(utils.formatEther(goalAmount))
+
+        var currentPercentage = numRaisedAmount * 100 / numGoalAmount
+
+        return `${currentPercentage}% recaudado de ${maticToUSD(numGoalAmount)} USD`
     }
-    else{
-        return "";
+
+    const maticContribution = () => {
+        if (raisedAmount != undefined) {
+            return utils.formatEther(raisedAmount)
+        }
+        else {
+            return "";
+        }
+    };
+    
+    useAsyncEffect(async () => {  
+        const currPrice=await usePriceFeed()
+        setMaticPrice(currPrice)
+        console.log(costsVec)
+    }, []);
+ 
+    const maticToUSD = (maticAmount:any) => {
+        if(maticPrice)
+            return maticAmount * maticPrice
+        else{
+            return 0
+        }
+    };
+    const getOptUSDPrice = (option:any) => {
+        if(costsVec){
+            return maticToUSD(formatEther(costsVec[option]))
+        }
+        else return 0
     }
-};
+
     return (
+        
+
         <>
             <main className="mainBackground">
-            <section className="container-fluid">
-            <div className="container paddingBottom">
+                <section className="container-fluid">
+                    <div className="container paddingBottom">
 
 
-                <div className="row mainProject">
+                        <div className="row mainProject">
 
-                    <div className="cardInnerSingle row">
+                            <div className="cardInnerSingle row">
 
-                        <div className="col-lg-5 col-md-4 col-sm-12">
+                                <div className="col-lg-5 col-md-4 col-sm-12">
 
-                            <div className="ImgArtist">
-                                <img className="artistMain roundedList" src="images/ars00.jpg" alt="" />
+                                    <div className="ImgArtist">
+                                        <img className="artistMain roundedList" src="images/ars00.jpg" alt="" />
 
+                                    </div>
+                                </div>
+
+                                <div className="col-lg-7 col-md-5 col-sm-12">
+                                    <div className="cardBodyInner">
+                                        <div className="divArtist">
+
+                                            <div className="divPadding">
+                                                <h2>{projTittle}</h2>
+                                                de <a className="anchorArtistName" href="#">Nombre de Artista</a>
+                                                <p className="bigger">Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+                                                    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                                </p>
+                                            </div>
+
+                                        </div>
+                                        <div className="progressArea">
+                                            <div className="upperProgress">
+                                                <div className="topProg">
+                                                    <span className="bolder">{maticToUSD(maticContribution())} </span>
+                                                    USD contribuidos
+                                                </div>
+                                                <div className="rightProg"><span className="bolder">{numOfContributions?.toString()}</span> Contribuyentes</div>
+                                            </div>
+                                            <ProgressBar now={raisedAmount?.mul(100).div(goalAmount || 1).toString()} />
+
+                                            <div className="lowerProgress">
+                                                <div className="leftProg">{getActualDonationString()}</div>
+                                                <div className="rightProg"><span className="bolder">25</span> D&iacute;as resteantes
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="buttonSocial">
+                                            <a className="CTA" href="#">Contribuir al proyecto</a>
+                                            <button className="btn btn-outline-dark btnSeguir" type="button">
+                                                <div className="btnContenidoFlex">
+                                                    <img className="btnIcon" src="images/icon-heart.png"
+                                                        alt="add to favorites" />
+                                                    <span>
+                                                        <a href="#">Seguir </a></span>
+                                                </div>
+                                            </button>
+                                            <div className="socialArea">
+
+                                                <a className="btnIconos" href="#" role="button">
+                                                    <div className="iconFacebook"></div>
+                                                </a>
+                                                <a className="btnIconos" href="#" role="button">
+                                                    <div className="iconTwitter"></div>
+                                                </a>
+                                                <a className="btnIconos" href="#" role="button">
+                                                    <div className="iconClip"></div>
+                                                </a>
+
+                                            </div>
+                                        </div>
+
+                                        <div className="categories">
+                                            <a className="anchorArtistName" href="#">Conciertos</a>,
+                                            <a className="anchorArtistName" href="#">Buenos Aires, Argentina</a>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <div className="col-lg-7 col-md-5 col-sm-12">
-                            <div className="cardBodyInner">
-                                <div className="divArtist">
-
-                                    <div className="divPadding">
-                                        <h2>Nombre del Proyecto</h2>
-                                        de <a className="anchorArtistName" href="#">Nombre de Artista</a>
-                                        <p className="bigger">Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                                            sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                        </p>
-                                    </div>
-
-                                </div>
-                                <div className="progressArea">
-                                    <div className="upperProgress">
-                                        <div className="topProg">
-                                            <span className="bolder">{maticContribution()} </span> 
-                                            Matic contribuidos 
-                                        </div>
-                                        <div className="rightProg"><span className="bolder">{numOfContributions?.toString()}</span> Contribuyentes</div>
-                                    </div>
-                                    <ProgressBar now={raisedAmount?.mul(100).div(goalAmount || 1 ).toString()}  />
-                                       
-                                    <div className="lowerProgress">
-                                        <div className="leftProg">11% recaudado de 8000 USD</div>
-                                        <div className="rightProg"><span className="bolder">25</span> D&iacute;as resteantes
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="buttonSocial">
-                                    <a className="CTA" href="#">Contribuir al proyecto</a>
-                                    <button className="btn btn-outline-dark btnSeguir" type="button">
-                                        <div className="btnContenidoFlex">
-                                            <img className="btnIcon" src="images/icon-heart.png"
-                                                alt="add to favorites" />
-                                            <span>
-                                                <a href="#">Seguir </a></span>
-                                        </div>
-                                    </button>
-                                    <div className="socialArea">
-                                        
-                                        <a className="btnIconos" href="#" role="button">
-                                            <div className="iconFacebook"></div>
-                                        </a>
-                                        <a className="btnIconos" href="#" role="button">
-                                            <div className="iconTwitter"></div>
-                                        </a>
-                                        <a className="btnIconos" href="#" role="button">
-                                            <div className="iconClip"></div>
-                                        </a>
-                                    
-                                    </div>
-                                </div>
-
-                                <div className="categories">    
-                                    <a className="anchorArtistName" href="#">Conciertos</a>, 
-                                    <a className="anchorArtistName" href="#">Buenos Aires, Argentina</a>
-                                </div>
-                               
-                               
-                            </div>
-                        </div>
                     </div>
-                </div>
-                
-            </div>
-        </section>
+                </section>
                 <section className="singleMain">
                     <div className="container paddingBottom">
                         <div className="row">
@@ -256,7 +288,7 @@ const maticContribution = () => {
                                         <h3>Contribuir sin Recompensa</h3>
                                         <div className="input-group mb-3 greenInput">
                                             <input type="text" className="form-control" placeholder="15" aria-label="15"
-                                                aria-describedby="amount" onChange={handleAmount}/>
+                                                aria-describedby="amount" onChange={handleAmount} />
                                             <span className="input-group-text" id="amount">USD</span>
                                         </div>
                                         <p className="bigger">Apoya el proyecto sin recompensa, simplemente porque te resulta
@@ -269,7 +301,7 @@ const maticContribution = () => {
                                         <h3>Bronce</h3>
                                     </div>
                                     <div className="rewardCardBody">
-                                        <p className="bigNum">150 USD</p>
+                                        <p className="bigNum">{getOptUSDPrice(0)} USD</p>
                                         <p className="itemReward">Reward Name</p>
                                         <p>Apoya el proyecto sin recompensa, simplemente porque te resulta
                                             interesante.</p>
@@ -287,7 +319,7 @@ const maticContribution = () => {
                                         <h3>Plata</h3>
                                     </div>
                                     <div className="rewardCardBody">
-                                        <p className="bigNum">200 USD</p>
+                                        <p className="bigNum">{getOptUSDPrice(1)} USD</p>
                                         <p className="itemReward">Reward Name</p>
                                         <p>Apoya el proyecto sin recompensa, simplemente porque te resulta
                                             interesante.</p>
@@ -305,7 +337,7 @@ const maticContribution = () => {
                                         <h3>Oro</h3>
                                     </div>
                                     <div className="rewardCardBody">
-                                        <p className="bigNum">500 USD</p>
+                                        <p className="bigNum">{getOptUSDPrice(2)}  USD</p>
                                         <p className="itemReward">Reward Name</p>
                                         <p>Apoya el proyecto sin recompensa, simplemente porque te resulta
                                             interesante.</p>
@@ -323,7 +355,7 @@ const maticContribution = () => {
                                         <h3>Diamante</h3>
                                     </div>
                                     <div className="rewardCardBody">
-                                        <p className="bigNum">750 USD</p>
+                                        <p className="bigNum">{getOptUSDPrice(3)} USD</p>
                                         <p className="itemReward">Reward Name</p>
                                         <p>Apoya el proyecto sin recompensa, simplemente porque te resulta
                                             interesante.</p>
@@ -341,7 +373,7 @@ const maticContribution = () => {
                                         <h3>Platino</h3>
                                     </div>
                                     <div className="rewardCardBody">
-                                        <p className="bigNum">1000 USD</p>
+                                        <p className="bigNum">{getOptUSDPrice(4)} USD </p>
                                         <p className="itemReward">Reward Name</p>
                                         <p>Apoya el proyecto sin recompensa, simplemente porque te resulta
                                             interesante.</p>
@@ -359,7 +391,7 @@ const maticContribution = () => {
                                         <h3>Paladio</h3>
                                     </div>
                                     <div className="rewardCardBody">
-                                        <p className="bigNum">2500 USD</p>
+                                        <p className="bigNum">{getOptUSDPrice(5)}   USD</p>
                                         <p className="itemReward">Reward Name</p>
                                         <p>Apoya el proyecto sin recompensa, simplemente porque te resulta
                                             interesante.</p>
