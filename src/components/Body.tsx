@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState } from 'react';
 import { useAccount } from "wagmi";
 import ProjectView from "./ProjectView";

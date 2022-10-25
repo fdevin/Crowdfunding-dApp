@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useProvider, useAccount } from "wagmi"
 import type { Crowdfactory } from "../contract-types/Crowdfactory";
 import { DEBUG, PROJ_CONTRACT_ADDRESS } from "../../constants";
@@ -30,8 +31,11 @@ function ProjectView() {
     const [amount, setAmount] = useState<string>("");
     
     // custom hook we made in hooks.ts for writing functions
-
-
+    const { writeAsync, isError } = useCrowdfundingProjectFunctionWriter({
+        contractAddress: PROJ_CONTRACT_ADDRESS || "",
+        functionName: "makeDonation",
+    });
+    
     const addRecentTransaction = useAddRecentTransaction();
 
     const handleClick = () => {

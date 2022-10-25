@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { DEBUG } from "../../constants";
 import type { Crowdfactory } from "../contract-types/Crowdfactory";
 import { useCrowdFactoryFunctionWriter } from "../hooks";
