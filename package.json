@@ -21,6 +21,7 @@
     "react-bootstrap": "^2.5.0",
     "react-dom": "^18.0.0",
     "react-icons": "^4.4.0",
+    "serve": "^14.0.1",
     "use-async-effect": "^2.2.7",
     "vite-plugin-fonts": "^0.6.0",
     "wagmi": "^0.5.11"
