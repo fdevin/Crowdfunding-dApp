@@ -1,10 +1,11 @@
 import { ethers } from 'ethers'
 import axios from 'axios';
+import { SERVER_URL } from '../constants';
 
 
 
 export async function usePriceFeed() : Promise<any> {
-    const { data: response } = await axios.get('http://127.0.1:8001/coin/matic');
+    const { data: response } = await axios.get(SERVER_URL +'coin/matic');
     console.log("RESPONSE!")
     console.log(response)
     if(!response)

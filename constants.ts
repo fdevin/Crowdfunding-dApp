@@ -5,3 +5,5 @@ export const PROJ_CONTRACT_ADDRESS =
 
 //just for testing purpose
 export const DEBUG = false;
+
+export const SERVER_URL = "https://dolphin-app-q567t.ondigitalocean.app";
