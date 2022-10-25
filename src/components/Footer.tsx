@@ -1,3 +1,11 @@
+import iconTwitter from '../../images/iconTwitter.png'
+import iconFacebook from '../../images/iconFacebook.png'
+import iconLinkedin from '../../images/iconLinkedin.png'
+import iconMedium from '../../images/iconMedium.png'
+import iconDiscord from '../../images/iconDiscord.png'
+import iconTelegram from '../../images/iconTelegram.png'
+
+
 
 function Footer() {
   // for testing no projects yet
@@ -16,25 +24,25 @@ function Footer() {
           <div className="container paddingFooter">
             <section>
               <a className="btnIconos" href="#" role="button">
-                  <div className="iconTwitter"></div>
+                  <div className="iconTwitter" style={{backgroundImage:`url(${iconTwitter})`}}></div>
               </a>
               <a className="btnIconos" href="#" role="button">
-                  <div className="iconFacebook"></div>
+                  <div className="iconFacebook" style={{backgroundImage:`url(${iconFacebook})`}}></div>
               </a>
               <a className="btnIconos" href="#" role="button">
-                  <div className="iconInstagram"></div>
+                  <div className="iconInstagram" ></div>
               </a>
               <a className="btnIconos" href="#" role="button">
-                  <div className="iconLinkedin"></div>
+                  <div className="iconLinkedin" style={{backgroundImage:`url(${iconLinkedin})`}}></div>
               </a>
               <a className="btnIconos" href="#" role="button">
-                  <div className="iconMedium"></div>
+                  <div className="iconMedium" style={{backgroundImage:`url(${iconMedium})`}}></div>
               </a>
               <a className="btnIconos" href="#" role="button">
-                  <div className="iconDiscord"></div>
+                  <div className="iconDiscord" style={{backgroundImage:`url(${iconDiscord})`}}></div>
               </a>
               <a className="btnIconos" href="#" role="button">
-                  <div className="iconTelegram"></div>
+                  <div className="iconTelegram" style={{backgroundImage:`url(${iconTelegram})`}}></div>
               </a>
             </section>
           </div>

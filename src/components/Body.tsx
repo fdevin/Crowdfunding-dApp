@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import { useAccount } from "wagmi";
 import ProjectView from "./ProjectView";
+import background from '../../images/heroBGMobile.png'
+
 function Body() {
   const [isDonationViewActive, setisDonationViewActive] = useState(false);
 
@@ -12,7 +14,7 @@ function Body() {
     return (
       <>
         <main>
-          <section className="topArea container-fluid">
+          <section className="topArea container-fluid" style={{backgroundImage:`url(${background})`}} >
             <div className="container">
               <div className="row TituloCrowdMobile">
                 <div className="col-md-8 col-sm-12">

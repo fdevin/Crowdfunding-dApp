@@ -7,9 +7,6 @@ import svgLoader from 'vite-svg-loader'
 export default defineConfig({
   plugins: [
     react(),
-    svgLoader({
-      defaultImport: 'url' // or 'raw'
-    }),
     ViteFonts({
       // Custom fonts.
       custom: {
