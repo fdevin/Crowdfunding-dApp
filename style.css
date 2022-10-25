@@ -1641,7 +1641,7 @@ input[type="file"]#inputImg {
 
 .topArea {
   padding-top: 4rem;
-  background: url(./images/heroBG.jpg);
+  background: url(public/images/heroBG.jpg);
   background-size: cover;
   height: 968px;
   display: flex;
