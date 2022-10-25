@@ -23,6 +23,7 @@ import type {
   BytesLike,
   CallOverrides,
   ContractTransaction,
+  Overrides,
   PayableOverrides,
   PopulatedTransaction,
   Signer,
@@ -39,6 +40,8 @@ export interface CrowdfundingprojectInterface extends utils.Interface {
     "projDescription()": FunctionFragment;
     "projTitle()": FunctionFragment;
     "raisedAmount()": FunctionFragment;
+    "reStock(uint64[8])": FunctionFragment;
+    "togglePause()": FunctionFragment;
     "transactionFee()": FunctionFragment;
   };
 
@@ -52,6 +55,8 @@ export interface CrowdfundingprojectInterface extends utils.Interface {
       | "projDescription"
       | "projTitle"
       | "raisedAmount"
+      | "reStock"
+      | "togglePause"
       | "transactionFee"
   ): FunctionFragment;
 
@@ -79,6 +84,14 @@ export interface CrowdfundingprojectInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "reStock",
+    values: [PromiseOrValue<BigNumberish>[]]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "togglePause",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "transactionFee",
     values?: undefined
   ): string;
@@ -101,6 +114,11 @@ export interface CrowdfundingprojectInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "projTitle", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "raisedAmount",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "reStock", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "togglePause",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -180,6 +198,15 @@ export interface Crowdfundingproject extends BaseContract {
 
     raisedAmount(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    reStock(
+      stockToAdd: PromiseOrValue<BigNumberish>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    togglePause(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     transactionFee(overrides?: CallOverrides): Promise<[BigNumber]>;
   };
 
@@ -202,6 +229,15 @@ export interface Crowdfundingproject extends BaseContract {
 
   raisedAmount(overrides?: CallOverrides): Promise<BigNumber>;
 
+  reStock(
+    stockToAdd: PromiseOrValue<BigNumberish>[],
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  togglePause(
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   transactionFee(overrides?: CallOverrides): Promise<BigNumber>;
 
   callStatic: {
@@ -223,6 +259,13 @@ export interface Crowdfundingproject extends BaseContract {
     projTitle(overrides?: CallOverrides): Promise<string>;
 
     raisedAmount(overrides?: CallOverrides): Promise<BigNumber>;
+
+    reStock(
+      stockToAdd: PromiseOrValue<BigNumberish>[],
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    togglePause(overrides?: CallOverrides): Promise<void>;
 
     transactionFee(overrides?: CallOverrides): Promise<BigNumber>;
   };
@@ -266,6 +309,15 @@ export interface Crowdfundingproject extends BaseContract {
 
     raisedAmount(overrides?: CallOverrides): Promise<BigNumber>;
 
+    reStock(
+      stockToAdd: PromiseOrValue<BigNumberish>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    togglePause(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     transactionFee(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
@@ -290,6 +342,15 @@ export interface Crowdfundingproject extends BaseContract {
     projTitle(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     raisedAmount(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    reStock(
+      stockToAdd: PromiseOrValue<BigNumberish>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    togglePause(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
 
     transactionFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };

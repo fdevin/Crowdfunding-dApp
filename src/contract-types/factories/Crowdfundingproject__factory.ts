@@ -205,6 +205,26 @@ const _abi = [
     type: "function",
   },
   {
+    inputs: [
+      {
+        internalType: "uint64[8]",
+        name: "stockToAdd",
+        type: "uint64[8]",
+      },
+    ],
+    name: "reStock",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "togglePause",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
     inputs: [],
     name: "transactionFee",
     outputs: [
