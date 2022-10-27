@@ -40,6 +40,8 @@ contract CrowdFactory {
     ) public {
         //initializing CrowdfundingProject contract
 
+        
+
         // Max value for free donation.
         stockPerTier_[7] = 2**64 - 1;
         costPerTier_[7] = 0;
@@ -47,13 +49,13 @@ contract CrowdFactory {
         CrowdfundingProject newproj = new CrowdfundingProject(
             //passing arguments from constructor function
             projectTitle,
-            projGoalAmount,
             projDescript,
+            projGoalAmount,
+            stockPerTier_,
+            costPerTier_,
             projOwnerAddr,
             feeWalletAddr,
-            feePercentageAmount,
-            stockPerTier_,
-            costPerTier_
+            feePercentageAmount
         );
 
         //pushing project address

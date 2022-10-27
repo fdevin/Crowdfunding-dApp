@@ -19,14 +19,24 @@ const _abi = [
         type: "string",
       },
       {
+        internalType: "string",
+        name: "projDescript",
+        type: "string",
+      },
+      {
         internalType: "uint256",
         name: "projGoalAmount_",
         type: "uint256",
       },
       {
-        internalType: "string",
-        name: "projDescript",
-        type: "string",
+        internalType: "uint64[8]",
+        name: "stockPerTier_",
+        type: "uint64[8]",
+      },
+      {
+        internalType: "uint256[8]",
+        name: "costPerTier_",
+        type: "uint256[8]",
       },
       {
         internalType: "address",
@@ -42,16 +52,6 @@ const _abi = [
         internalType: "uint256",
         name: "transactionFee_",
         type: "uint256",
-      },
-      {
-        internalType: "uint64[8]",
-        name: "stockPerTier_",
-        type: "uint64[8]",
-      },
-      {
-        internalType: "uint256[8]",
-        name: "costPerTier_",
-        type: "uint256[8]",
       },
     ],
     stateMutability: "nonpayable",
@@ -103,6 +103,32 @@ const _abi = [
   {
     inputs: [],
     name: "getCosts",
+    outputs: [
+      {
+        internalType: "uint256[8]",
+        name: "c",
+        type: "uint256[8]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getCostsWFee",
+    outputs: [
+      {
+        internalType: "uint256[8]",
+        name: "c",
+        type: "uint256[8]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getFeePerTier",
     outputs: [
       {
         internalType: "uint256[8]",

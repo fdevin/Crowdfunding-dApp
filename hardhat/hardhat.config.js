@@ -29,7 +29,7 @@ module.exports = {
       accounts: [
         "4218db7f0ef2b4763f5de5ea69d3404811a685969c11f0c66519b05a3a52dc77",
       ],
-      gas: 4612388,
+      gasLimit: 4612388,
     },
   },
   etherscan: {

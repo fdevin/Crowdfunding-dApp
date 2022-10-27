@@ -5,6 +5,7 @@ import CROWDFACTORY_ABI from "./abis/crowdfactory.json";
 import CROWNFUNDINGPROJECT_ABI from "./abis/crowdfundingproject.json";
 import type { Crowdfactory } from "./contract-types/Crowdfactory";
 import type { Crowdfundingproject } from "./contract-types/Crowdfundingproject";
+import { useState } from "react";
 
 /*//////////////////////////////////////////////////////////////
                               CROWD FACTORY
@@ -121,4 +122,18 @@ export function useCrowdfundingProjectFunctionReader({
   });
 
   return contractRead;
+}
+
+
+export  function useModal() {
+  const [isOpen, setisOpen] = useState(false);
+
+  const toggle = () => {
+    setisOpen(!isOpen);
+  };
+
+  return {
+    isOpen,
+    toggle
+  };
 }

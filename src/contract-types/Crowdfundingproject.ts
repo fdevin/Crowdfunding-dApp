@@ -33,6 +33,8 @@ import type {
 export interface CrowdfundingprojectInterface extends utils.Interface {
   functions: {
     "getCosts()": FunctionFragment;
+    "getCostsWFee()": FunctionFragment;
+    "getFeePerTier()": FunctionFragment;
     "getStocks()": FunctionFragment;
     "goalAmount()": FunctionFragment;
     "makeDonation(uint256)": FunctionFragment;
@@ -48,6 +50,8 @@ export interface CrowdfundingprojectInterface extends utils.Interface {
   getFunction(
     nameOrSignatureOrTopic:
       | "getCosts"
+      | "getCostsWFee"
+      | "getFeePerTier"
       | "getStocks"
       | "goalAmount"
       | "makeDonation"
@@ -61,6 +65,14 @@ export interface CrowdfundingprojectInterface extends utils.Interface {
   ): FunctionFragment;
 
   encodeFunctionData(functionFragment: "getCosts", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "getCostsWFee",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getFeePerTier",
+    values?: undefined
+  ): string;
   encodeFunctionData(functionFragment: "getStocks", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "goalAmount",
@@ -97,6 +109,14 @@ export interface CrowdfundingprojectInterface extends utils.Interface {
   ): string;
 
   decodeFunctionResult(functionFragment: "getCosts", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "getCostsWFee",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getFeePerTier",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "getStocks", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "goalAmount", data: BytesLike): Result;
   decodeFunctionResult(
@@ -179,6 +199,14 @@ export interface Crowdfundingproject extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber[]] & { c: BigNumber[] }>;
 
+    getCostsWFee(
+      overrides?: CallOverrides
+    ): Promise<[BigNumber[]] & { c: BigNumber[] }>;
+
+    getFeePerTier(
+      overrides?: CallOverrides
+    ): Promise<[BigNumber[]] & { c: BigNumber[] }>;
+
     getStocks(
       overrides?: CallOverrides
     ): Promise<[BigNumber[]] & { s: BigNumber[] }>;
@@ -212,6 +240,10 @@ export interface Crowdfundingproject extends BaseContract {
 
   getCosts(overrides?: CallOverrides): Promise<BigNumber[]>;
 
+  getCostsWFee(overrides?: CallOverrides): Promise<BigNumber[]>;
+
+  getFeePerTier(overrides?: CallOverrides): Promise<BigNumber[]>;
+
   getStocks(overrides?: CallOverrides): Promise<BigNumber[]>;
 
   goalAmount(overrides?: CallOverrides): Promise<BigNumber>;
@@ -242,6 +274,10 @@ export interface Crowdfundingproject extends BaseContract {
 
   callStatic: {
     getCosts(overrides?: CallOverrides): Promise<BigNumber[]>;
+
+    getCostsWFee(overrides?: CallOverrides): Promise<BigNumber[]>;
+
+    getFeePerTier(overrides?: CallOverrides): Promise<BigNumber[]>;
 
     getStocks(overrides?: CallOverrides): Promise<BigNumber[]>;
 
@@ -292,6 +328,10 @@ export interface Crowdfundingproject extends BaseContract {
   estimateGas: {
     getCosts(overrides?: CallOverrides): Promise<BigNumber>;
 
+    getCostsWFee(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getFeePerTier(overrides?: CallOverrides): Promise<BigNumber>;
+
     getStocks(overrides?: CallOverrides): Promise<BigNumber>;
 
     goalAmount(overrides?: CallOverrides): Promise<BigNumber>;
@@ -323,6 +363,10 @@ export interface Crowdfundingproject extends BaseContract {
 
   populateTransaction: {
     getCosts(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    getCostsWFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    getFeePerTier(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getStocks(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 

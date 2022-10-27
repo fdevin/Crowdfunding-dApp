@@ -2,19 +2,19 @@
 import { useProvider, useAccount } from "wagmi"
 import type { Crowdfactory } from "../contract-types/Crowdfactory";
 import { DEBUG, PROJ_CONTRACT_ADDRESS } from "../../constants";
-import { useCosts, useGoalAmount, useNumOfContributions, useProjTitle, useRaisedAmount, useStocks } from "../read";
+import { useCosts, useGoalAmount, useNumOfContributions, useCostsWFee, useProjTitle, useRaisedAmount, useStocks, useFeePerTier } from "../read";
 import { toWei, toBN } from "../utils";
 import { useAddRecentTransaction, useConnectModal } from "@rainbow-me/rainbowkit";
-import { useCrowdfundingProjectFunctionWriter } from "../hooks";
-import { useState,useEffect } from "react";
-import type { ChangeEvent, FormEvent} from "react";
+import { useCrowdfundingProjectFunctionWriter, useModal } from "../hooks";
+import { useState, useEffect } from "react";
+import type { ChangeEvent, FormEvent } from "react";
 import { ethers, utils } from "ethers";
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import { usePriceFeed } from "../price-feed";
 import axios from 'axios'
 import useAsyncEffect from 'use-async-effect'
 import { formatEther } from "ethers/lib/utils";
-
+import Modal from "./Modal";
 
 function ProjectView() {
     //const provider = useProvider()
@@ -22,20 +22,24 @@ function ProjectView() {
     const raisedAmount = useRaisedAmount(PROJ_CONTRACT_ADDRESS);
     const numOfContributions = useNumOfContributions(PROJ_CONTRACT_ADDRESS);
     const [maticPrice, setMaticPrice] = useState([0]);
+    const [selectedOption, setSelectedOption] = useState([0]);
 
     const stockVec = useStocks(PROJ_CONTRACT_ADDRESS);
     const costsVec = useCosts(PROJ_CONTRACT_ADDRESS);
-    const goalAmount = useGoalAmount(PROJ_CONTRACT_ADDRESS)
-    const projTittle = useProjTitle(PROJ_CONTRACT_ADDRESS)
+    const costsWFee = useCostsWFee(PROJ_CONTRACT_ADDRESS);
+    const feeVec = useFeePerTier(PROJ_CONTRACT_ADDRESS);
+    const goalAmount = useGoalAmount(PROJ_CONTRACT_ADDRESS);
+    const projTittle = useProjTitle(PROJ_CONTRACT_ADDRESS);
     const { openConnectModal } = useConnectModal();
     const [amount, setAmount] = useState<string>("");
-    
+    const { isOpen, toggle } = useModal();
+
     // custom hook we made in hooks.ts for writing functions
     const { writeAsync, isError } = useCrowdfundingProjectFunctionWriter({
         contractAddress: PROJ_CONTRACT_ADDRESS || "",
         functionName: "makeDonation",
     });
-    
+
     const addRecentTransaction = useAddRecentTransaction();
 
     const handleClick = () => {
@@ -67,6 +71,13 @@ function ProjectView() {
     const handleDonate = async (option: number) => {
         console.log("MAAAATIC")
         console.log(maticPrice)
+        setSelectedOption(option)
+        toggle(true)
+        window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+
+    };
+
+    const handleDonateTransaction = async () => {
 
         if (!acc.isConnected) {
             alert("need to connect your acc");
@@ -74,26 +85,27 @@ function ProjectView() {
             openConnectModal && openConnectModal()
             return;
         }
-        if (option > 7) {
+        if (selectedOption > 7) {
             console.log("Invalid value");
             DEBUG && console.log("Invalid Option Value");
         }
 
         if (costsVec != undefined) {
             console.log("inicia")
-            if (option == 7) {
-                console.log(amount)
-                const freeAmount = toWei(amount)
-
+            if (selectedOption == 7) {
+                
+                const freeAmount = toWei((maticPrice * (amount * 1.02)).toString())
 
                 if (freeAmount.isZero()) {
                     return;
                 }
 
                 const tx = await writeAsync({
-                    args: [option],
+                    args: [selectedOption],
                     overrides: {
                         value: freeAmount,
+                        gasLimit: 10000000,
+
                     },
                 });
                 console.log("tx >>> ", tx);
@@ -103,18 +115,20 @@ function ProjectView() {
                     description: `Donate ${freeAmount} MATIC`,
                 });
             } else {
-                const optionCost = costsVec[option];
+
+                const optionCost = costsWFee[selectedOption];
                 //const fee = optionCost.mul(toBN(2))
                 //const feeAmount = fee.div(100)
                 //console.log(feeAmount.toString())
                 //const optionFee = optionCost.add(feeAmount);
                 //console.log("option fee");
 
-                //console.log(optionFee);
+                console.log(optionCost)
                 const tx = await writeAsync({
-                    args: [option],
+                    args: [selectedOption],
                     overrides: {
                         value: optionCost,
+                        gasLimit: 10000000,
                     },
                 });
                 console.log("tx >>> ", tx);
@@ -130,6 +144,8 @@ function ProjectView() {
             DEBUG && console.log("Cannot retrieve the right value");
             return
         }
+
+
     };
 
     const getActualDonationString = () => {
@@ -141,7 +157,7 @@ function ProjectView() {
 
         var currentPercentage = numRaisedAmount * 100 / numGoalAmount
 
-        return `${currentPercentage}% recaudado de ${maticToUSD(numGoalAmount)} USD`
+        return `${currentPercentage.toFixed(3)}% recaudado de ${maticToUSD(numGoalAmount)} USD`
     }
 
     const maticContribution = () => {
@@ -152,32 +168,84 @@ function ProjectView() {
             return "";
         }
     };
-    
-    useAsyncEffect(async () => {  
-        const currPrice=await usePriceFeed()
+
+    useAsyncEffect(async () => {
+        const currPrice = await usePriceFeed()
         setMaticPrice(currPrice)
         console.log(costsVec)
     }, []);
- 
-    const maticToUSD = (maticAmount:any) => {
-        if(maticPrice)
-            return maticAmount * maticPrice
-        else{
+
+    const maticToUSD = (maticAmount: any) => {
+        if (maticPrice)
+            return (maticAmount * maticPrice).toFixed(3)
+        else {
             return 0
         }
     };
-    const getOptUSDPrice = (option:any) => {
-        if(costsVec){
+    const getOptUSDPrice = (option: any) => {
+        if (costsVec) {
             return maticToUSD(formatEther(costsVec[option]))
         }
         else return 0
     }
 
     return (
-        
+
 
         <>
             <main className="mainBackground">
+                {costsVec &&
+                    <Modal isOpen={isOpen} toggle={toggle}>
+                        {(selectedOption != 7) && <>
+                            <div>
+                                <h2>Vas a donar $ {maticToUSD(formatEther(costsVec[selectedOption]))}</h2>
+                            </div>
+                            <div>
+                                Tu donación nos ayuda a generar más y mejores proyectos, muchas gracias! Si necesitas ayuda para continuar,<a>haz click aquí</a> , de lo contrario continúa el proceso debajo de estas líneas.
+                            </div>
+                            <div style={{ "display": "block", "flexDirection": "column", "marginTop": "10px" }}>
+                                <div>Tu donación: $ {maticToUSD(formatEther(costsVec[selectedOption]))}</div>
+                                <div>Fee administrativo: $ {maticToUSD(formatEther(feeVec[selectedOption]))}</div>
+                                <div>Total: $ {maticToUSD(formatEther(costsWFee[selectedOption]))} ({formatEther(costsWFee[selectedOption])} MATIC)</div>
+                            </div>
+                            <div style={{ "display": "flex", "flexDirection": "column", "align-items": "center", "justifyContent": "center" }}>
+                                <a onClick={() => { handleDonateTransaction() }} className="CTA">Donar</a>
+                            </div>
+                            <div>
+                                <span>Al hacer la donación el usuario acepta los términos y condiciones.</span>
+                            </div>
+                            <div>
+                                <span>Tasa de cambio referencial: {maticPrice}$ por Matic</span>
+                            </div>
+                        </>
+
+                        }
+                        {(selectedOption == 7) && <>
+                            <div>
+                                <h2>Vas a donar ${amount}</h2>
+                            </div>
+                            <div>
+                                Tu donación nos ayuda a generar más y mejores proyectos, muchas gracias! Si necesitas ayuda para continuar,<a>haz click aquí</a> , de lo contrario continúa el proceso debajo de estas líneas.
+                            </div>
+                            <div style={{ "display": "block", "flexDirection": "column", "marginTop": "10px" }}>
+                                <div>Tu donación: $ {amount}</div>
+                                <div>Fee administrativo: $ {amount - amount/1.02}</div>
+                                <div>Total: $ {amount * 1.02} ({maticPrice * (amount * 1.02)} MATIC)</div>
+                            </div>
+                            <div style={{ "display": "flex", "flexDirection": "column", "align-items": "center", "justifyContent": "center" }}>
+                                <a onClick={() => { handleDonateTransaction() }} className="CTA">Donar</a>
+                            </div>
+                            <div>
+                                <span>Al hacer la donación el usuario acepta los términos y condiciones.</span>
+                            </div>
+                            <div>
+                                <span>Tasa de cambio referencial: {maticPrice}$ por Matic</span>
+                            </div>
+                        </>
+
+                        }
+
+                    </Modal>}
                 <section className="container-fluid">
                     <div className="container paddingBottom">
 

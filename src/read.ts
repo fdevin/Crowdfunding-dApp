@@ -186,3 +186,45 @@ export function useStocks(
 
   return stocksArray as unknown as Array<BigNumber>;
 }
+
+export function useCostsWFee(
+  contractAddress: string
+): Array<BigNumber> | undefined {
+  const costsAmountReader = useCrowdfundingProjectFunctionReader({
+    contractAddress: contractAddress,
+    functionName: "getCostsWFee",
+  });
+
+  const costsWFeeArray:
+    | Awaited<ReturnType<Crowdfundingproject["getCostsWFee"]>>
+    | Result
+    | undefined = costsAmountReader.data;
+
+  DEBUG && console.log("stocksAmount: ", costsWFeeArray);
+
+  if (!costsWFeeArray) return undefined;
+
+  return costsWFeeArray as unknown as Array<BigNumber>;
+}
+
+export function useFeePerTier(
+  contractAddress: string
+): Array<BigNumber> | undefined {
+  const feePerTierReader = useCrowdfundingProjectFunctionReader({
+    contractAddress: contractAddress,
+    functionName: "getFeePerTier",
+  });
+
+  const feePerTierArray:
+    | Awaited<ReturnType<Crowdfundingproject["getFeePerTier"]>>
+    | Result
+    | undefined = feePerTierReader.data;
+
+  DEBUG && console.log("stocksAmount: ", feePerTierArray);
+
+  if (!feePerTierArray) return undefined;
+
+  return feePerTierArray as unknown as Array<BigNumber>;
+}
+
+

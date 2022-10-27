@@ -1,7 +1,7 @@
 const { run } = require("hardhat");
 
 async function main() {
-  const contractAddress = "0x2e59b8f50eA64E110Ce86417a4d5d0eD91740F7e";
+  const contractAddress = "0xEf2d0c9c8eA5c39e90341dd8117beaF507E15109";
 
   try {
     await run("verify:verify", {

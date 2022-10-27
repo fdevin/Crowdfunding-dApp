@@ -33,14 +33,14 @@ describe("Croudfunding Factory Contract Testing", function () {
     console.log();
     let stock = [1, 1, 0, 0, 0, 0,0, 0];
     let prices = [
-      ethers.utils.parseEther("1.0"),
+      ethers.utils.parseEther("0.1"),
       ethers.utils.parseEther("2.0"),
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
+      ethers.utils.parseEther("3.0"),
+      ethers.utils.parseEther("4.0"),
+      ethers.utils.parseEther("5.0"),
+      ethers.utils.parseEther("6.0"),
+      ethers.utils.parseEther("7.0"),
+      ethers.utils.parseEther("8.0"),
     ];
     let projectTittle = "Project0";
     let projGoalAmount = ethers.utils.parseEther("1.0");
@@ -71,13 +71,21 @@ describe("Croudfunding Factory Contract Testing", function () {
     const balanceFeeWalletOwner = await provider.getBalance(owner.address);
     const balanceCreatorWalletOwner = await provider.getBalance(addr1.address);
 
+    const costsWFee = await cfInstance.getCostsWFee();
     //console.log("Prev Bal");
     //console.log(formatEther(balanceFeeWalletOwner));
     //console.log(formatEther(balanceCreatorWalletOwner));
     let prevStock = await cfInstance.getStocks()[0];
-    let donationAmount = prices[0];
-    //console.log("Prev Stock");
-    //console.log(prevStock);
+    let donationAmount = costsWFee[0];
+    //console.log(costsWFee);
+
+    await expect(cfInstance.connect(addr1).makeDonation(0, {
+      value: 0,
+    })).to.be.revertedWith("Amount sent too low for selected opt.");
+
+    await expect(cfInstance.connect(addr1).makeDonation(7, {
+      value: 0,
+    })).to.be.revertedWith("Amount sent too low for selected opt.");
 
     await cfInstance.connect(addr1).makeDonation(0, {
       value: donationAmount,
@@ -104,8 +112,8 @@ describe("Croudfunding Factory Contract Testing", function () {
     await cfInstance.connect(addr1).reStock(new_stock_added);
 
     let currentStock = await cfInstance.getStocks()
-    console.log("Stock")
-    console.log(currentStock)
+    //console.log("Stock")
+    //console.log(currentStock)
     expect(currentStock[0]).to.be.eq(ethers.BigNumber.from(expected_new_stock[0]));
     expect(currentStock[1]).to.be.eq(ethers.BigNumber.from(expected_new_stock[1]));
     expect(currentStock[2]).to.be.eq(ethers.BigNumber.from(expected_new_stock[2]));
@@ -125,21 +133,19 @@ describe("Croudfunding Factory Contract Testing", function () {
     await cfInstance.connect(addr1).togglePause()
 
     console.log("Post Free Donation");
-    console.log(formatEther(await provider.getBalance(owner.address)));
-    console.log(formatEther(await provider.getBalance(addr1.address)));
     console.log(formatEther(await cfInstance.raisedAmount()));
-
+    console.log(costsWFee)
     await cfInstance.connect(addr2).makeDonation(1, {
-      value: ethers.utils.parseEther("2.0"),
+      value: ethers.utils.parseEther("2.4"),
     })
 
     await expect( cfInstance.connect(addr2).makeDonation(1, {
-      value: ethers.utils.parseEther("2.0"),
+      value: ethers.utils.parseEther("2.4"),
     }))
 
     
     await expect( cfInstance.connect(addr2).makeDonation(1, {
-      value: ethers.utils.parseEther("2.0"),
+      value: ethers.utils.parseEther("2.4"),
     })).to.be.revertedWith('No stock left');
     
   });
