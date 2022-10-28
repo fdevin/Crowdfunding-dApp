@@ -25,6 +25,7 @@ module.exports = {
       chainId: 1337,
     },
     matic: {
+      // INFURA_URL
       url: "https://polygon-mumbai.infura.io/v3/c48ae9943075418d848c97fa094d6633",
       accounts: [
         "4218db7f0ef2b4763f5de5ea69d3404811a685969c11f0c66519b05a3a52dc77",
