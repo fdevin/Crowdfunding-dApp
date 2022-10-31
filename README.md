@@ -5,7 +5,7 @@
 
 - Smart Contract Language: Solidity
 - Smart Contract Deploy and Verify Scripts: Javascript
-- Smart Contract Development Environment: [Hardhat](https://hardhat.org/)
+- Smart Contract Development Environment: [Hardhat]         tps://hardhat.org/)
 - Frontend Language: React - TypeScript
 - Wallet Connect: [Rainbowkit](https://www.rainbowkit.com/)
 - Interacting with Contract through Frontend: [Wagmi](https://wagmi.sh/)

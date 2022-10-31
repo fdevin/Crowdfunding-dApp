@@ -93,7 +93,7 @@ function ProjectView() {
         if (costsVec != undefined) {
             console.log("inicia")
             if (selectedOption == 7) {
-                
+
                 const freeAmount = toWei((maticPrice * (amount * 1.02)).toString())
 
                 if (freeAmount.isZero()) {
@@ -190,11 +190,9 @@ function ProjectView() {
     }
 
     return (
-
-
         <>
             <main className="mainBackground">
-                {costsVec &&
+                {costsVec && costsWFee && feeVec &&
                     <Modal isOpen={isOpen} toggle={toggle}>
                         {(selectedOption != 7) && <>
                             <div>
@@ -229,7 +227,7 @@ function ProjectView() {
                             </div>
                             <div style={{ "display": "block", "flexDirection": "column", "marginTop": "10px" }}>
                                 <div>Tu donación: $ {amount}</div>
-                                <div>Fee administrativo: $ {amount - amount/1.02}</div>
+                                <div>Fee administrativo: $ {amount - amount / 1.02}</div>
                                 <div>Total: $ {amount * 1.02} ({maticPrice * (amount * 1.02)} MATIC)</div>
                             </div>
                             <div style={{ "display": "flex", "flexDirection": "column", "align-items": "center", "justifyContent": "center" }}>

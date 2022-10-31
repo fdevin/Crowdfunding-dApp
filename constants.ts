@@ -7,4 +7,4 @@ export const PROJ_CONTRACT_ADDRESS =
 //just for testing purpose
 export const DEBUG = false;
 
-export const SERVER_URL = "http://localhost:3001";
+export const SERVER_URL = "https://shark-app-8hlnn.ondigitalocean.app";

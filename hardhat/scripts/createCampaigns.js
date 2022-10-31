@@ -6,7 +6,7 @@ async function main() {
     "CrowdFactory",
     contractFactoryAddr
   );
-  stock = [2,2,2,2,2,2,2,2];
+  stock = [2, 2, 2, 2, 2, 2, 2, 2];
   standar_cost = ethers.utils.parseUnits("1", 18);
   premium_cost = ethers.utils.parseUnits("2", 18);
   cost = [
