@@ -9,7 +9,7 @@ export const DEBUG = false;
 
 export const SERVER_URL = "https://shark-app-8hlnn.ondigitalocean.app";
 
-export const RPC_PROVIDER = "https://polygon-mumbai.infura.io/v3/c48ae9943075418d848c97fa094d6633"
+export const RPC_PROVIDER = "https://polygon-mumbai.infura.io/v3/18e0637774c34939b40c46b18b41d9af"
 
 // this is a free provider that might have requests limits, use it whenever you dont have your RPCProvider active.
 //export const RPC_PROVIDER = "https://rpc.ankr.com/polygon_mumbai"

@@ -26,7 +26,7 @@ module.exports = {
     },
     matic: {
       // INFURA_URL
-      url: "https://polygon-mumbai.infura.io/v3/c48ae9943075418d848c97fa094d6633",
+      url: "https://polygon-mumbai.infura.io/v3/18e0637774c34939b40c46b18b41d9af",
       accounts: [
         // TODO: Add your wallet private key.
         "",
