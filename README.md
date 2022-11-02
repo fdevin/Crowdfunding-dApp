@@ -27,5 +27,12 @@ Project forked from https://github.com/kaymomin/Crowdfunding-dApp.
 # Additional Configurations Needed ( Contract Preparations )
 
 Contracts should be configured under constants.ts where FACTORY_CONTRACT_ADDRESS belongs to the CrowdFactory cibtract and the PROJ_CONTRACT_ADDRESS belongs to the deployed contract address.
+
+RPC Provider should be added in this constants.ts (This refers to ex Infura Polygon RPC provider)
  
 **PROJECT FEE** — The project fee is configured under hardhat/contracts/crowdfundingFactory.sol. The feePercentageAmount variable  will hold the amount using numbers from 1-100 representing the percentage itself. For a 2% fee , feePercentageAmount should be denfined as 2.
+
+**Hardhat Config** — Under this configuration file hardhat.config.js under /hardhat/ folder we need to set your POLYGONSCAN_API_KEY your INFURA_RPC_URL and your wallet private key. This is only required when the contracts needs to get deployed and validated.
+# Compiling for FTP server
+
+1. **Build the project** — The project needs to be built with the command yarn dev. This will create a new project called /dist/ where the compied assets will be. In order to upload those files to the server we need to edit the index.html to crowdfunding.html. This will allow the ftp server to detect this html as another path rather than index.html on the server. Images and Assets folders will need to be uploaded to the images and assets folders respectively on the ftp server.

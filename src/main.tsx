@@ -23,6 +23,7 @@ import ReactDOM from "react-dom/client";
 import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
 import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 import { publicProvider } from "wagmi/providers/public";
+import { RPC_PROVIDER } from "../constants";
 
 const { chains, provider } = configureChains(
   [
@@ -33,7 +34,7 @@ const { chains, provider } = configureChains(
     jsonRpcProvider({
       rpc: () => {
         return {
-          http: "https://rpc.ankr.com/polygon_mumbai",
+          http: RPC_PROVIDER,
         };
       },
     }),
