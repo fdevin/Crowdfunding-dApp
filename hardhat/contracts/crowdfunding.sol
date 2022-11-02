@@ -8,7 +8,8 @@ contract CrowdFactory {
     address[] public publishedProjs;
     // wallet where all the fees will go. This value will be sent to all the contracts created with this factory. This setting cannot be changed.
     address public feeWalletAddr;
-    uint256 public feePercentageAmount = 1500; // This number is represented in integers
+    // The minimum valid percentage is 0.01
+    uint256 public feePercentageAmount = 2; // This number represents 2% in the crowdfunding proj contract.
 
     event ProjectCreated(
         string projTitle,
@@ -39,9 +40,6 @@ contract CrowdFactory {
         address projOwnerAddr
     ) public {
         //initializing CrowdfundingProject contract
-
-        
-
         // Max value for free donation.
         stockPerTier_[7] = 2**64 - 1;
         costPerTier_[7] = 0;

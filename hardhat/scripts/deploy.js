@@ -5,9 +5,9 @@ async function main() {
   const CrowdFactory = await ethers.getContractFactory("CrowdFactory");
 
   // Start deployment, returning a promise that resolves to a contract object
-
+  factory_owner = "0x5E3a756fbB7a2095eb86305de1339341627Eee2b"
   const crowd = await CrowdFactory.deploy(
-    "0xC47545D6226d04f124782481f5e51Cf07c20b840"
+    factory_owner
   ); // Instance of the contract
   console.log("Contract deployed to address:", crowd.address);
 }

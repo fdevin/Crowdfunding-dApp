@@ -148,5 +148,6 @@ describe("Croudfunding Factory Contract Testing", function () {
       value: ethers.utils.parseEther("2.4"),
     })).to.be.revertedWith('No stock left');
     
+    console.log(await cfInstance.getCostsWFee())
   });
 });

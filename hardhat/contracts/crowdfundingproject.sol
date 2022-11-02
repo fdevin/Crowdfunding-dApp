@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Unlicensed
+pragma solidity ^0.8.15;
 
 contract CrowdfundingProject {
     //defining state variables
@@ -44,10 +46,9 @@ contract CrowdfundingProject {
 
         for (uint i = 0 ; i < 7 ; i++){
                     // Calculated Fee amount that will go to the fee wallet.
-            uint256 calculatedFeeAmount = costPerTier_[i] / 50;
+            uint256 calculatedFeeAmount = (costPerTier_[i] / 10000) * (transactionFee_ * 100);
             _feePerTier[i] = calculatedFeeAmount;
             _costWFee[i] =  costPerTier_[i] + _feePerTier[i];
-
         }
 
         //mapping values
