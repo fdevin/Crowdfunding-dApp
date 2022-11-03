@@ -7,7 +7,7 @@ export const PROJ_CONTRACT_ADDRESS =
 //just for testing purpose
 export const DEBUG = false;
 
-export const SERVER_URL = "https://shark-app-8hlnn.ondigitalocean.app";
+export const SERVER_URL = "https://shark-app-8hlnn.ondigitalocean.app/crowdfunding-node2";
 
 export const RPC_PROVIDER = "https://polygon-mumbai.infura.io/v3/18e0637774c34939b40c46b18b41d9af"
 
